@@ -1,5 +1,6 @@
 const jwt = require("jwt-simple");
 const moment = require("moment");
+const createError = require("http-errors");
 
 function createToken(user) {
   const payload = {
@@ -17,7 +18,15 @@ function validateToken(req, res, next) {
   }
 
   const token = req.headers.authorization.split(" ")[1];
-  const payload = jwt.decode(token, process.env.SECRET_TOKEN);
+  let payload = "";
+
+  try {
+    payload = jwt.decode(token, process.env.SECRET_TOKEN);
+  } catch (error) {
+    logger.error("Invalid Token.");
+    next(createError(500, "Invalid Token."));
+  }
+
   const tokenExp = new Date(payload.exp);
   const currentDate = new Date(moment());
 

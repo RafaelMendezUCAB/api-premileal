@@ -9,31 +9,31 @@ const logger = require("./logger");
 const connectionBD = require("./config/db");
 const router = require("./router");
 
-//Se habilita el cors para interaccion con otras aplicaciones
+// We initialize Cors.
 app.use(cors());
 
-//Configuracion de elementos de seguridad y optimizacion
+// Security and Optimization dependencies initialization.
 app.use(compression());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//Coneccion a la BD incluida en el req de cada consulta
+// Database connection for each request.
 app.use((req, res, next) => {
   req.con = connectionBD;
   next();
 });
 
-//Logger de peticiones a la API
+// Requests logger to API.
 app.use((req, res, next) => {
   logger.info(req.method + " " + req.originalUrl);
   next();
 });
 
-//Router general de la API o prefijo global
+// Base route (prefix) for all routes.
 app.use("/premileal/api", router);
 
-// Manejo general de errores 404
+// 404 Error: Not Found.
 app.use((req, res, next) => {
   var err = new Error("Not Found");
   err.status = 404;
