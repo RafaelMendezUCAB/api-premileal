@@ -59,7 +59,7 @@ module.exports = {
       logger.error(`Error in module "role" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove role from database."));
     } else {
-      logger.info("role Deleted.");
+      logger.info("role deleted.");
       res.json(results);
     }
   },

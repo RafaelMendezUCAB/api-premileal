@@ -59,7 +59,7 @@ module.exports = {
       logger.error(`Error in module "user" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove user from database."));
     } else {
-      logger.info("User Deleted.");
+      logger.info("User deleted.");
       res.json(results);
     }
   },
