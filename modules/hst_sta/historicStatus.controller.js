@@ -2,4 +2,65 @@ const createError = require("http-errors");
 const historicStatusModel = require("./historicStatus.model");
 const logger = require("../../logger");
 
-module.exports = {};
+module.exports = {
+/* --------------------------- GET ------------------------- */
+  getAllHistoricStatus: async (req, res, next) => {
+    let results = await historicStatusModel.getAllHistoricStatus(req.con);
+    if (results instanceof Error) {
+      logger.error('Error in module "HistoricStatus" (GET /all)');
+      next(createError(500, "Error. Couldn't obtain HistoricStatuss from database."));
+    } else {
+      logger.info("List of registered HistoricStatuss.");
+      res.json(results);
+    }
+  },
+
+  getHistoricStatus: async (req, res, next) => {
+    let results = await historicStatusModel.getHistoricStatus(req.con,req.params.id);
+    if (results instanceof Error) {
+      logger.error(`Error in module "HistoricStatus" (GET /${req.params.id})`);
+      next(createError(500, "Error. Couldn't obtain HistoricStatus from database."));
+    } else {
+      logger.info("Registered HistoricStatus list.");
+      res.json(results);
+    }
+  },
+
+/* ------------------------- POST --------------------------- */
+  postHistoricStatus: async (req, res, next) => {
+    const historicStatus = req.body;
+    let results = await historicStatusModel.postHistoricStatus(req.con,historicStatus);
+    if (results instanceof Error) {
+      logger.error('Error in module "HistoricStatus" (POST /create)');
+      next(createError(500, "Error. Could't create HistoricStatus from database."));
+    } else {
+      logger.info("HistoricStatus created.");
+      res.json(results);
+    }
+  },
+
+/* -------------------------- PUT ---------------------------- */
+  putHistoricStatus: async (req, res, next) => {
+    const historicStatus = req.body;
+    let results = await historicStatusModel.putHistoricStatus(req.con,req.params.id,historicStatus);
+    if (results instanceof Error) {
+      logger.error(`Error in module "HistoricStatus" (PUT /update/${req.params.id})`);
+      next(createError(500, "Error. Could't update HistoricStatus from database."));
+    } else {
+      logger.info("Updated HistoricStatus.");
+      res.json(results);
+    }
+  },
+
+/* ------------------------- DELETE -------------------------- */
+  deleteHistoricStatus: async (req, res, next) => {
+    let results = await historicStatusModel.deleteHistoricStatus(req.con,req.params.id);
+    if (results instanceof Error) {
+      logger.error(`Error in module "HistoricStatus" (DELETE /delete/${req.params.id})`);
+      next(createError(500, "Error. Could't remove HistoricStatus from database."));
+    } else {
+      logger.info("HistoricStatus deleted.");
+      res.json(results);
+    }
+  },
+};
