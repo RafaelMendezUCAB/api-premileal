@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postPlace: async (req, res, next) => {
+createPlace: async (req, res, next) => {
     const place = req.body;
-    let results = await placeModel.postPlace(req.con,place);
+    let results = await placeModel.createPlace(req.con,place);
     if (results instanceof Error) {
       logger.error('Error in module "place" (POST /create)');
       next(createError(500, "Error. Could't create place from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putPlace: async (req, res, next) => {
+updatePlace: async (req, res, next) => {
     const place = req.body;
-    let results = await placeModel.putPlace(req.con,req.params.id,place);
+    let results = await placeModel.updatePlace(req.con,req.params.id,place);
     if (results instanceof Error) {
       logger.error(`Error in module "place" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update place from database."));

@@ -8,10 +8,10 @@ router.get("/all", /*auth.validateToken ,*/ userController.getAllUsers);
 router.get("/:id", /*auth.validateToken ,*/ userController.getUser);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ userController.postUser);
+router.post("/create", /*auth.validateToken ,*/ userController.createUser);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ userController.putUser);
+router.put("/update/:id", /*auth.validateToken ,*/ userController.updateUser);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ userController.deleteUser);

@@ -8,10 +8,10 @@ router.get("/all", /*auth.validateToken ,*/ historicStatusController.getAllHisto
 router.get("/:id", /*auth.validateToken ,*/ historicStatusController.getHistoricStatus);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ historicStatusController.postHistoricStatus);
+router.post("/create", /*auth.validateToken ,*/ historicStatusController.createHistoricStatus);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ historicStatusController.putHistoricStatus);
+router.put("/update/:id", /*auth.validateToken ,*/ historicStatusController.updateHistoricStatus);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ historicStatusController.deleteHistoricStatus);

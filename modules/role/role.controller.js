@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postRole: async (req, res, next) => {
+createRole: async (req, res, next) => {
     const role = req.body;
-    let results = await roleModel.postRole(req.con,role);
+    let results = await roleModel.createRole(req.con,role);
     if (results instanceof Error) {
       logger.error('Error in module "role" (POST /create)');
       next(createError(500, "Error. Could't create role from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putRole: async (req, res, next) => {
+updateRole: async (req, res, next) => {
     const role = req.body;
-    let results = await roleModel.putRole(req.con,req.params.id,role);
+    let results = await roleModel.updateRole(req.con,req.params.id,role);
     if (results instanceof Error) {
       logger.error(`Error in module "role" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update role from database."));

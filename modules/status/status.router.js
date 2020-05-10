@@ -8,10 +8,10 @@ router.get("/all", /*auth.validateToken ,*/ statusController.getAllStatus);
 router.get("/:id", /*auth.validateToken ,*/ statusController.getStatus);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ statusController.postStatus);
+router.post("/create", /*auth.validateToken ,*/ statusController.createStatus);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ statusController.putStatus);
+router.put("/update/:id", /*auth.validateToken ,*/ statusController.updateStatus);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ statusController.deleteStatus);

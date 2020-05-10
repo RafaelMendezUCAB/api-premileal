@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postStatus: async (req, res, next) => {
+createStatus: async (req, res, next) => {
     const status = req.body;
-    let results = await statusModel.postStatus(req.con,status);
+    let results = await statusModel.createStatus(req.con,status);
     if (results instanceof Error) {
       logger.error('Error in module "status" (POST /create)');
       next(createError(500, "Error. Could't create status from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putStatus: async (req, res, next) => {
+updateStatus: async (req, res, next) => {
     const status = req.body;
-    let results = await statusModel.putStatus(req.con,req.params.id,status);
+    let results = await statusModel.updateStatus(req.con,req.params.id,status);
     if (results instanceof Error) {
       logger.error(`Error in module "status" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update status from database."));

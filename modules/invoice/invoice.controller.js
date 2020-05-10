@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postInvoice: async (req, res, next) => {
+createInvoice: async (req, res, next) => {
     const invoice = req.body;
-    let results = await invoiceModel.postInvoice(req.con,invoice);
+    let results = await invoiceModel.createInvoice(req.con,invoice);
     if (results instanceof Error) {
       logger.error('Error in module "invoice" (POST /create)');
       next(createError(500, "Error. Could't create invoice from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putInvoice: async (req, res, next) => {
+  updateInvoice: async (req, res, next) => {
     const invoice = req.body;
-    let results = await invoiceModel.putInvoice(req.con,req.params.id,invoice);
+    let results = await invoiceModel.updateInvoice(req.con,req.params.id,invoice);
     if (results instanceof Error) {
       logger.error(`Error in module "invoice" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update invoice from database."));

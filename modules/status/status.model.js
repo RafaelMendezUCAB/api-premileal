@@ -15,7 +15,7 @@ module.exports = {
 
 /* ------------------------- POST -------------------------- */
 
-  postStatus: (con,status) => {
+createStatus: (con,status) => {
   	return con.query('INSERT INTO STATUS(sta_name,sta_description) VALUES($1,$2)',
   	[status.sta_name,status.sta_description]).catch((error) => {
       return new Error(error);
@@ -24,7 +24,7 @@ module.exports = {
 
 /* -------------------------- PUT ---------------------------- */
 
-  putStatus: (con,sta_id,status) => {
+updateStatus: (con,sta_id,status) => {
   	return con.query('UPDATE STATUS SET sta_name = $1,sta_description = $2 WHERE sta_id = $3',
   	[status.sta_name,status.sta_description,sta_id]).catch((error) => {
       return new Error(error);

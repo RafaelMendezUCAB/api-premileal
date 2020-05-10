@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postBankAccount: async (req, res, next) => {
+createBankAccount: async (req, res, next) => {
     const bankAccount = req.body;
-    let results = await bankAccountModel.postBankAccount(req.con,bankAccount);
+    let results = await bankAccountModel.createBankAccount(req.con,bankAccount);
     if (results instanceof Error) {
       logger.error('Error in module "BankAccount" (POST /create)');
       next(createError(500, "Error. Could't create bank account from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putBankAccount: async (req, res, next) => {
+  updateBankAccount: async (req, res, next) => {
     const bankAccount = req.body;
-    let results = await bankAccountModel.putBankAccount(req.con,req.params.id,bankAccount);
+    let results = await bankAccountModel.updateBankAccount(req.con,req.params.id,bankAccount);
     if (results instanceof Error) {
       logger.error(`Error in module "BankAccount" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update bank account from database."));

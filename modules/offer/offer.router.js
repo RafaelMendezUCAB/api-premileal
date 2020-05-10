@@ -8,10 +8,10 @@ router.get("/all", /*auth.validateToken ,*/ offerController.getAllOffers);
 router.get("/:id", /*auth.validateToken ,*/ offerController.getOffer);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ offerController.postOffer);
+router.post("/create", /*auth.validateToken ,*/ offerController.createOffer);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ offerController.putOffer);
+router.put("/update/:id", /*auth.validateToken ,*/ offerController.updateOffer);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ offerController.deleteOffer);

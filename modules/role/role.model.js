@@ -15,7 +15,7 @@ module.exports = {
 
 /* ------------------------- POST -------------------------- */
 
-  postRole: (con,role) => {
+createRole: (con,role) => {
   	return con.query('INSERT INTO ROLE(r_name,r_description) VALUES($1,$2)',
   	[role.r_name,role.r_description]).catch((error) => {
       return new Error(error);
@@ -24,7 +24,7 @@ module.exports = {
 
 /* -------------------------- PUT ---------------------------- */
 
-  putRole: (con,r_id,role) => {
+updateRole: (con,r_id,role) => {
   	return con.query('UPDATE ROLE SET r_name = $1,r_description = $2 WHERE r_id = $3',
   	[role.r_name,role.r_description,r_id]).catch((error) => {
       return new Error(error);

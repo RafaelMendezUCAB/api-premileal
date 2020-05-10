@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postUser: async (req, res, next) => {
+createUser: async (req, res, next) => {
     const user = req.body;
-    let results = await userModel.postUser(req.con,user);
+    let results = await userModel.createUser(req.con,user);
     if (results instanceof Error) {
       logger.error('Error in module "user" (POST /create)');
       next(createError(500, "Error. Could't create user from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putUser: async (req, res, next) => {
+updateUser: async (req, res, next) => {
     const user = req.body;
-    let results = await userModel.putUser(req.con,req.params.id,user);
+    let results = await userModel.updateUser(req.con,req.params.id,user);
     if (results instanceof Error) {
       logger.error(`Error in module "user" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update user from database."));

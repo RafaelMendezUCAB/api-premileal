@@ -8,10 +8,10 @@ router.get("/all", /*auth.validateToken ,*/ paymentController.getAllPayments);
 router.get("/:id", /*auth.validateToken ,*/ paymentController.getPayment);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ paymentController.postPayment);
+router.post("/create", /*auth.validateToken ,*/ paymentController.createPayment);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ paymentController.putPayment);
+router.put("/update/:id", /*auth.validateToken ,*/ paymentController.updatePayment);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ paymentController.deletePayment);

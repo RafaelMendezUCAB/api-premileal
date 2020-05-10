@@ -15,7 +15,7 @@ module.exports = {
 
 /* ------------------------- POST -------------------------- */
 
-  postProduct: (con,product) => {
+createProduct: (con,product) => {
   	return con.query('INSERT INTO PRODUCT(pro_name,pro_code) VALUES($1,$2)',
   	[product.pro_name,product.pro_code]).catch((error) => {
       return new Error(error);
@@ -24,7 +24,7 @@ module.exports = {
 
 /* -------------------------- PUT ---------------------------- */
 
-  putProduct: (con,pro_id,product) => {
+updateProduct: (con,pro_id,product) => {
   	return con.query('UPDATE PRODUCT SET pro_name = $1,pro_code = $2 WHERE pro_id = $3',
   	[product.pro_name,product.pro_code,pro_id]).catch((error) => {
       return new Error(error);

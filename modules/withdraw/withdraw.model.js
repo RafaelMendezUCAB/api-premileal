@@ -15,7 +15,7 @@ module.exports = {
 
 /* ------------------------- POST -------------------------- */
 
-  postWithdraw: (con,withdraw) => {
+createWithdraw: (con,withdraw) => {
   	return con.query('INSERT INTO WITHDRAW(w_points,w_dolars,u_w_id,ba_w_id) VALUES($1,$2,$3,$4)',
   	[withdraw.w_points,withdraw.w_dolars,withdraw.u_w_id,withdraw.ba_w_id]).catch((error) => {
       return new Error(error);
@@ -24,7 +24,7 @@ module.exports = {
 
 /* -------------------------- PUT ---------------------------- */
 
-  putWithdraw: (con,w_id,withdraw) => {
+updateWithdraw: (con,w_id,withdraw) => {
   	return con.query('UPDATE WITHDRAW SET w_points = $1, w_dolars = $2, u_w_id = $3, ba_w_id = $4 WHERE w_id = $5',
   	[withdraw.w_points,withdraw.w_dolars,withdraw.u_w_id,withdraw.ba_w_id,w_id]).catch((error) => {
       return new Error(error);

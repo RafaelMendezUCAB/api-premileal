@@ -8,10 +8,10 @@ router.get("/all", /*auth.validateToken ,*/ withdrawController.getAllWithdraws);
 router.get("/:id", /*auth.validateToken ,*/ withdrawController.getWithdraw);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ withdrawController.postWithdraw);
+router.post("/create", /*auth.validateToken ,*/ withdrawController.createWithdraw);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ withdrawController.putWithdraw);
+router.put("/update/:id", /*auth.validateToken ,*/ withdrawController.updateWithdraw);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ withdrawController.deleteWithdraw);

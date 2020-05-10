@@ -8,10 +8,10 @@ router.get("/all", /*auth.validateToken ,*/ levelController.getAllLevels);
 router.get("/:id", /*auth.validateToken ,*/ levelController.getLevel);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ levelController.postLevel);
+router.post("/create", /*auth.validateToken ,*/ levelController.createLevel);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ levelController.putLevel);
+router.put("/update/:id", /*auth.validateToken ,*/ levelController.updateLevel);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ levelController.deleteLevel);

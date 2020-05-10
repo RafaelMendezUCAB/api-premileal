@@ -15,7 +15,7 @@ module.exports = {
 
 /* ------------------------- POST -------------------------- */
 
-  postOffer: (con,offer) => {
+createOffer: (con,offer) => {
   	return con.query('INSERT INTO OFFER(o_name,o_valid_through,o_percentage) VALUES($1,$2,$3)',
   	[offer.o_name,offer.o_valid_through,offer.o_percentage]).catch((error) => {
       return new Error(error);
@@ -24,7 +24,7 @@ module.exports = {
 
 /* -------------------------- PUT ---------------------------- */
 
-  putOffer: (con,o_id,offer) => {
+updateOffer: (con,o_id,offer) => {
   	return con.query('UPDATE OFFER SET o_name = $1,o_valid_through = $2,o_percentage = $3 WHERE o_id = $4',
   	[offer.o_name,offer.o_valid_through,offer.o_percentage,o_id]).catch((error) => {
       return new Error(error);

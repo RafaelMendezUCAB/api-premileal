@@ -8,10 +8,10 @@ router.get("/all", /*auth.validateToken ,*/ bankAccountController.getAllBankAcco
 router.get("/:id", /*auth.validateToken ,*/ bankAccountController.getBankAccount);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ bankAccountController.postBankAccount);
+router.post("/create", /*auth.validateToken ,*/ bankAccountController.createBankAccount);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ bankAccountController.putBankAccount);
+router.put("/update/:id", /*auth.validateToken ,*/ bankAccountController.updateBankAccount);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ bankAccountController.deleteBankAccount);

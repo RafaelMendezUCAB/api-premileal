@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postSettings: async (req, res, next) => {
+createSettings: async (req, res, next) => {
     const settings = req.body;
-    let results = await settingsModel.postSettings(req.con,settings);
+    let results = await settingsModel.createSettings(req.con,settings);
     if (results instanceof Error) {
       logger.error('Error in module "settings" (POST /create)');
       next(createError(500, "Error. Could't create settings from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putSettings: async (req, res, next) => {
+updateSettings: async (req, res, next) => {
     const settings = req.body;
-    let results = await settingsModel.putSettings(req.con,req.params.id,settings);
+    let results = await settingsModel.updateSettings(req.con,req.params.id,settings);
     if (results instanceof Error) {
       logger.error(`Error in module "settings" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update settings from database."));
