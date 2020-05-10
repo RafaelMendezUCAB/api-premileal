@@ -6,6 +6,7 @@ const auth = require("../../middlewares/auth");
 /* --------------------------- GET ------------------------- */
 router.get("/all", /*auth.validateToken ,*/ userController.getAllUsers);
 router.get("/:id", /*auth.validateToken ,*/ userController.getUser);
+router.get('/login/social/:email/:type', /*auth.validateToken,*/ userController.socialLogin);
 
 /* ------------------------- POST -------------------------- */
 router.post("/create", /*auth.validateToken ,*/ userController.createUser);
