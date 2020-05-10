@@ -13,6 +13,12 @@ module.exports = {
     });
   },
 
+  socialLogin: (con, email, type) => {
+    return con.query("SELECT * FROM USER_F, ROLE, LEVEL WHERE u_email = '"+email+"' and u_type = '"+type+"' and u_fk_role = r_id and r_name = 'client' and u_fk_level = l_id").catch((error) => {
+      return new Error(error);
+    });
+  },
+
 /* ------------------------- POST -------------------------- */
   createUser: (con, user) => {
   	return con.query('INSERT INTO USER_F(u_name, u_lastName, u_password, u_image, u_email, u_birthdate, u_points, u_type, fk_role_id, fk_place_id, fk_level_id) VALUES($1,$2,$3,$4,$5,$6,0,$7,1,$8,1)',
