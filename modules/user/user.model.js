@@ -14,7 +14,7 @@ module.exports = {
   },
 
   socialLogin: (con, email, type) => {
-    return con.query("SELECT * FROM USER_F, ROLE, LEVEL WHERE u_email = '"+email+"' and u_type = '"+type+"' and u_fk_role = r_id and r_name = 'client' and u_fk_level = l_id").catch((error) => {
+    return con.query("SELECT * FROM USER_F, ROLE, LEVEL WHERE u_email = '"+email+"' and u_type = '"+type+"' and fk_role_id = r_id and r_name = 'client' and fk_level_id = l_id").catch((error) => {
       return new Error(error);
     });
   },
