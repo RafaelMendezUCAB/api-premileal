@@ -14,7 +14,7 @@ module.exports = {
   },
 
   socialLogin: (con, email, type) => {
-    return con.query("SELECT * FROM USER_F, ROLE, LEVEL WHERE u_email = '"+email+"' and u_type = '"+type+"' and fk_role_id = r_id and r_name = 'client' and fk_level_id = l_id").catch((error) => {
+    return con.query("SELECT u_id as \"userID\", u_name as name, u_lastname as \"lastName\", u_password as password, u_image as image, u_email as email, u_birthdate as birthdate, u_points as points, u_type as type, fk_role_id as \"roleID\", fk_place_id as \"placeID\", fk_level_id as \"levelID\", r_name as \"roleName\", r_description as \"roleDescription\", l_name as \"levelName\", l_percentage as \"levelPercentage\", l_bonus as \"levelBonus\" FROM USER_F, ROLE, LEVEL WHERE u_email = '"+email+"' and u_type = '"+type+"' and fk_role_id = r_id and r_name = 'client' and fk_level_id = l_id").catch((error) => {
       return new Error(error);
     });
   },
