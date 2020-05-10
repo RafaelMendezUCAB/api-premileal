@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getProduct: async (req, res, next) => {
-    let results = await productModel.getProduct(req.con,req.params.id);
+    let results = await productModel.getProduct(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "product" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain product from database."));
@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postProduct: async (req, res, next) => {
+createProduct: async (req, res, next) => {
     const product = req.body;
-    let results = await productModel.postProduct(req.con,product);
+    let results = await productModel.createProduct(req.con, product);
     if (results instanceof Error) {
       logger.error('Error in module "product" (POST /create)');
       next(createError(500, "Error. Could't create product from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putProduct: async (req, res, next) => {
+updateProduct: async (req, res, next) => {
     const product = req.body;
-    let results = await productModel.putProduct(req.con,req.params.id,product);
+    let results = await productModel.updateProduct(req.con, req.params.id, product);
     if (results instanceof Error) {
       logger.error(`Error in module "product" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update product from database."));
@@ -54,7 +54,7 @@ module.exports = {
 
 /* ------------------------- DELETE -------------------------- */
   deleteProduct: async (req, res, next) => {
-    let results = await productModel.deleteProduct(req.con,req.params.id);
+    let results = await productModel.deleteProduct(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "product" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove product from database."));

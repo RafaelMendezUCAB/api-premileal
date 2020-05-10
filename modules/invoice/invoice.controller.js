@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getInvoice: async (req, res, next) => {
-    let results = await invoiceModel.getInvoice(req.con,req.params.id);
+    let results = await invoiceModel.getInvoice(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "invoice" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain invoice from database."));
@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postInvoice: async (req, res, next) => {
+createInvoice: async (req, res, next) => {
     const invoice = req.body;
-    let results = await invoiceModel.postInvoice(req.con,invoice);
+    let results = await invoiceModel.createInvoice(req.con, invoice);
     if (results instanceof Error) {
       logger.error('Error in module "invoice" (POST /create)');
       next(createError(500, "Error. Could't create invoice from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putInvoice: async (req, res, next) => {
+  updateInvoice: async (req, res, next) => {
     const invoice = req.body;
-    let results = await invoiceModel.putInvoice(req.con,req.params.id,invoice);
+    let results = await invoiceModel.updateInvoice(req.con, req.params.id, invoice);
     if (results instanceof Error) {
       logger.error(`Error in module "invoice" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update invoice from database."));
@@ -54,7 +54,7 @@ module.exports = {
 
 /* ------------------------- DELETE -------------------------- */
   deleteInvoice: async (req, res, next) => {
-    let results = await invoiceModel.deleteInvoice(req.con,req.params.id);
+    let results = await invoiceModel.deleteInvoice(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "invoice" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove invoice from database."));

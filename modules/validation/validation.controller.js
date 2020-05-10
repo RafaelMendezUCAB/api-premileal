@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getValidation: async (req, res, next) => {
-    let results = await validationModel.getValidation(req.con,req.params.id);
+    let results = await validationModel.getValidation(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "validation" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain validation from database."));
@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postValidation: async (req, res, next) => {
+createValidation: async (req, res, next) => {
     const validation = req.body;
-    let results = await validationModel.postValidation(req.con,validation);
+    let results = await validationModel.createValidation(req.con, validation);
     if (results instanceof Error) {
       logger.error('Error in module "validation" (POST /create)');
       next(createError(500, "Error. Could't create validation from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putValidation: async (req, res, next) => {
+updateValidation: async (req, res, next) => {
     const validation = req.body;
-    let results = await validationModel.putValidation(req.con,req.params.id,validation);
+    let results = await validationModel.updateValidation(req.con, req.params.id, validation);
     if (results instanceof Error) {
       logger.error(`Error in module "validation" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update validation from database."));
@@ -54,7 +54,7 @@ module.exports = {
 
 /* ------------------------- DELETE -------------------------- */
   deleteValidation: async (req, res, next) => {
-    let results = await validationModel.deleteValidation(req.con,req.params.id);
+    let results = await validationModel.deleteValidation(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "validation" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove validation from database."));

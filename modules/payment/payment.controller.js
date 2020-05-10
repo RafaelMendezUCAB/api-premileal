@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getPayment: async (req, res, next) => {
-    let results = await paymentModel.getPayment(req.con,req.params.id);
+    let results = await paymentModel.getPayment(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "payment" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain payment from database."));
@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postPayment: async (req, res, next) => {
+createPayment: async (req, res, next) => {
     const payment = req.body;
-    let results = await paymentModel.postPayment(req.con,payment);
+    let results = await paymentModel.createPayment(req.con, payment);
     if (results instanceof Error) {
       logger.error('Error in module "payment" (POST /create)');
       next(createError(500, "Error. Could't create payment from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putPayment: async (req, res, next) => {
+  updatePayment: async (req, res, next) => {
     const payment = req.body;
-    let results = await paymentModel.putPayment(req.con,req.params.id,payment);
+    let results = await paymentModel.updatePayment(req.con, req.params.id, payment);
     if (results instanceof Error) {
       logger.error(`Error in module "payment" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update payment from database."));
@@ -54,7 +54,7 @@ module.exports = {
 
 /* ------------------------- DELETE -------------------------- */
   deletePayment: async (req, res, next) => {
-    let results = await paymentModel.deletePayment(req.con,req.params.id);
+    let results = await paymentModel.deletePayment(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "payment" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove payment from database."));

@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getWithdraw: async (req, res, next) => {
-    let results = await withdrawModel.getWithdraw(req.con,req.params.id);
+    let results = await withdrawModel.getWithdraw(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "withdraw" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain withdraw from database."));
@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postWithdraw: async (req, res, next) => {
+createWithdraw: async (req, res, next) => {
     const withdraw = req.body;
-    let results = await withdrawModel.postWithdraw(req.con,withdraw);
+    let results = await withdrawModel.createWithdraw(req.con, withdraw);
     if (results instanceof Error) {
       logger.error('Error in module "withdraw" (POST /create)');
       next(createError(500, "Error. Could't create withdraw from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putWithdraw: async (req, res, next) => {
+updateWithdraw: async (req, res, next) => {
     const withdraw = req.body;
-    let results = await withdrawModel.putWithdraw(req.con,req.params.id,withdraw);
+    let results = await withdrawModel.updateWithdraw(req.con, req.params.id, withdraw);
     if (results instanceof Error) {
       logger.error(`Error in module "withdraw" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update withdraw from database."));
@@ -54,7 +54,7 @@ module.exports = {
 
 /* ------------------------- DELETE -------------------------- */
   deleteWithdraw: async (req, res, next) => {
-    let results = await withdrawModel.deleteWithdraw(req.con,req.params.id);
+    let results = await withdrawModel.deleteWithdraw(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "withdraw" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove withdraw from database."));

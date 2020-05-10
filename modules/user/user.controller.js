@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getUser: async (req, res, next) => {
-    let results = await userModel.getUser(req.con,req.params.id);
+    let results = await userModel.getUser(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "user" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain user from database."));
@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postUser: async (req, res, next) => {
+  createUser: async (req, res, next) => {
     const user = req.body;
-    let results = await userModel.postUser(req.con,user);
+    let results = await userModel.createUser(req.con, user);
     if (results instanceof Error) {
       logger.error('Error in module "user" (POST /create)');
       next(createError(500, "Error. Could't create user from database."));
@@ -39,10 +39,21 @@ module.exports = {
     }
   },
 
+  registerUser: async (req, res, next) => {
+    let results = await userModel.registerUser(req.con, req.body);
+    if (results instanceof Error) {
+      logger.error('Error in module "user" (POST /singup)');
+      next(createError(500, "Error. Couldn't register user in Database."));
+    } else {
+      logger.info("User registered.");
+      res.send('User registered successfully');
+    }
+  },
+
 /* -------------------------- PUT ---------------------------- */
-  putUser: async (req, res, next) => {
+  updateUser: async (req, res, next) => {
     const user = req.body;
-    let results = await userModel.putUser(req.con,req.params.id,user);
+    let results = await userModel.updateUser(req.con, req.params.id, user);
     if (results instanceof Error) {
       logger.error(`Error in module "user" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update user from database."));
@@ -54,7 +65,7 @@ module.exports = {
 
 /* ------------------------- DELETE -------------------------- */
   deleteUser: async (req, res, next) => {
-    let results = await userModel.deleteUser(req.con,req.params.id);
+    let results = await userModel.deleteUser(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "user" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove user from database."));

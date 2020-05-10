@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getBankAccount: async (req, res, next) => {
-    let results = await bankAccountModel.getBankAccount(req.con,req.params.id);
+    let results = await bankAccountModel.getBankAccount(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "BankAccount" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain bank account from database."));
@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postBankAccount: async (req, res, next) => {
+createBankAccount: async (req, res, next) => {
     const bankAccount = req.body;
-    let results = await bankAccountModel.postBankAccount(req.con,bankAccount);
+    let results = await bankAccountModel.createBankAccount(req.con, bankAccount);
     if (results instanceof Error) {
       logger.error('Error in module "BankAccount" (POST /create)');
       next(createError(500, "Error. Could't create bank account from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putBankAccount: async (req, res, next) => {
+  updateBankAccount: async (req, res, next) => {
     const bankAccount = req.body;
-    let results = await bankAccountModel.putBankAccount(req.con,req.params.id,bankAccount);
+    let results = await bankAccountModel.updateBankAccount(req.con, req.params.id, bankAccount);
     if (results instanceof Error) {
       logger.error(`Error in module "BankAccount" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update bank account from database."));
@@ -54,7 +54,7 @@ module.exports = {
 
 /* ------------------------- DELETE -------------------------- */
   deleteBankAccount: async (req, res, next) => {
-    let results = await bankAccountModel.deleteBankAccount(req.con,req.params.id);
+    let results = await bankAccountModel.deleteBankAccount(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "BankAccount" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove bank account from database."));

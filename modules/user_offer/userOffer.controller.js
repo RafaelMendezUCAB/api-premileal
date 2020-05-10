@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getUserOffer: async (req, res, next) => {
-    let results = await userOfferModel.getUserOffer(req.con,req.params.id);
+    let results = await userOfferModel.getUserOffer(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "UserOffer" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain UserOffer from database."));
@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postUserOffer: async (req, res, next) => {
+createUserOffer: async (req, res, next) => {
     const userOffer = req.body;
-    let results = await userOfferModel.postUserOffer(req.con,userOffer);
+    let results = await userOfferModel.createUserOffer(req.con, userOffer);
     if (results instanceof Error) {
       logger.error('Error in module "UserOffer" (POST /create)');
       next(createError(500, "Error. Could't create UserOffer from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putUserOffer: async (req, res, next) => {
+updateUserOffer: async (req, res, next) => {
     const userOffer = req.body;
-    let results = await userOfferModel.putUserOffer(req.con,req.params.id,userOffer);
+    let results = await userOfferModel.updateUserOffer(req.con, req.params.id, userOffer);
     if (results instanceof Error) {
       logger.error(`Error in module "UserOffer" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update UserOffer from database."));
@@ -54,7 +54,7 @@ module.exports = {
 
 /* ------------------------- DELETE -------------------------- */
   deleteUserOffer: async (req, res, next) => {
-    let results = await userOfferModel.deleteUserOffer(req.con,req.params.id);
+    let results = await userOfferModel.deleteUserOffer(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "UserOffer" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove UserOffer from database."));

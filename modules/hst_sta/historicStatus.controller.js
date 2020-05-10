@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getHistoricStatus: async (req, res, next) => {
-    let results = await historicStatusModel.getHistoricStatus(req.con,req.params.id);
+    let results = await historicStatusModel.getHistoricStatus(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "HistoricStatus" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain HistoricStatus from database."));
@@ -27,9 +27,9 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-  postHistoricStatus: async (req, res, next) => {
+createHistoricStatus: async (req, res, next) => {
     const historicStatus = req.body;
-    let results = await historicStatusModel.postHistoricStatus(req.con,historicStatus);
+    let results = await historicStatusModel.createHistoricStatus(req.con, historicStatus);
     if (results instanceof Error) {
       logger.error('Error in module "HistoricStatus" (POST /create)');
       next(createError(500, "Error. Could't create HistoricStatus from database."));
@@ -40,9 +40,9 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-  putHistoricStatus: async (req, res, next) => {
+  updateHistoricStatus: async (req, res, next) => {
     const historicStatus = req.body;
-    let results = await historicStatusModel.putHistoricStatus(req.con,req.params.id,historicStatus);
+    let results = await historicStatusModel.updateHistoricStatus(req.con, req.params.id, historicStatus);
     if (results instanceof Error) {
       logger.error(`Error in module "HistoricStatus" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update HistoricStatus from database."));
@@ -54,7 +54,7 @@ module.exports = {
 
 /* ------------------------- DELETE -------------------------- */
   deleteHistoricStatus: async (req, res, next) => {
-    let results = await historicStatusModel.deleteHistoricStatus(req.con,req.params.id);
+    let results = await historicStatusModel.deleteHistoricStatus(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "HistoricStatus" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove HistoricStatus from database."));

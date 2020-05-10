@@ -3,10 +3,17 @@ const router = express.Router();
 const userOfferController = require("./userOffer.controller");
 const auth = require("../../middlewares/auth");
 
+/* --------------------------- GET ------------------------- */
 router.get("/all", /*auth.validateToken ,*/ userOfferController.getAllUserOffers);
 router.get("/:id", /*auth.validateToken ,*/ userOfferController.getUserOffer);
-router.post("/create", /*auth.validateToken ,*/ userOfferController.postUserOffer);
-router.put("/update/:id", /*auth.validateToken ,*/ userOfferController.putUserOffer);
+
+/* ------------------------- POST -------------------------- */
+router.post("/create", /*auth.validateToken ,*/ userOfferController.createUserOffer);
+
+/* -------------------------- PUT ---------------------------- */
+router.put("/update/:id", /*auth.validateToken ,*/ userOfferController.updateUserOffer);
+
+/* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ userOfferController.deleteUserOffer);
 
 module.exports = router;
