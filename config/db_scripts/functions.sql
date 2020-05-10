@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION GENERATE_USER_FIRST_STATUS()
     RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        INSERT INTO HST_STA(hs_date, fk_user_id, fk_status_id) VALUES(now(), NEW.ID, 5);
+        INSERT INTO HST_STA(hs_date, fk_user_id, fk_status_id) VALUES(now(), NEW.u_id, 5);
         RETURN NEW;
     END;
     $BODY$
