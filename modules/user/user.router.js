@@ -9,7 +9,7 @@ router.get("/:id", /*auth.validateToken ,*/ userController.getUser);
 
 /* ------------------------- POST -------------------------- */
 router.post("/create", /*auth.validateToken ,*/ userController.createUser);
-router.post("/signup", /*auth.validateToken,*/ userController.registerUser);
+router.post("/signup", /*auth.validateToken,*/ userController.registerUser); // works for both: federated and not federated.
 
 /* -------------------------- PUT ---------------------------- */
 router.put("/update/:id", /*auth.validateToken ,*/ userController.updateUser);
