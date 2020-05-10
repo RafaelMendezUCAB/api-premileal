@@ -26,6 +26,17 @@ module.exports = {
     }
   },
 
+  socialLogin: async(req, res, next) => {
+    let results = await userModel.socialLogin(req.con, req.params.email, req.params.type);
+    if (results instanceof Error) {
+      logger.error('Error in module "user" (GET /socialLogin)');
+      next(createError(500, "Error. Couldn't retreive user data."));
+    } else {
+      logger.info("User data retrieved successfully.");
+      res.json(results);
+    }
+  },
+
 /* ------------------------- POST --------------------------- */
   createUser: async (req, res, next) => {
     const user = req.body;
