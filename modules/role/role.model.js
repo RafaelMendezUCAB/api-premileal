@@ -25,8 +25,8 @@ createRole: (con,role) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateRole: (con,r_id,role) => {
-  	return con.query('UPDATE ROLE SET r_name = $1,r_description = $2 WHERE r_id = $3',
-  	[role.r_name,role.r_description,r_id]).catch((error) => {
+  	return con.query('UPDATE ROLE SET r_name = $1, r_description = $2 WHERE r_id = $3',
+  	[role.name, role.description, r_id]).catch((error) => {
       return new Error(error);
     });
   },

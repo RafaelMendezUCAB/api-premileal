@@ -25,8 +25,8 @@ createProduct: (con,product) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateProduct: (con,pro_id,product) => {
-  	return con.query('UPDATE PRODUCT SET pro_name = $1,pro_code = $2 WHERE pro_id = $3',
-  	[product.pro_name,product.pro_code,pro_id]).catch((error) => {
+  	return con.query('UPDATE PRODUCT SET pro_name = $1, pro_code = $2 WHERE pro_id = $3',
+  	[product.name, product.code, pro_id]).catch((error) => {
       return new Error(error);
     });
   },

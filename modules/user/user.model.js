@@ -23,8 +23,8 @@ createUser: (con,user) => {
 
 /* -------------------------- PUT ---------------------------- */
 updateUser: (con,u_id,user) => {
-  	return con.query('UPDATE USER_F SET u_name = $1, u_lastName = $2, u_password = $3, u_image = $4, u_email = $5, u_birthdate = $6, u_points = $7, r_u_id = $8, p_u_id = $9, l_u_id = $10 WHERE u_id = $11',
-  	[user.name, user.lastName, user.password, user.image, user.email, user.birthdate, user.points, user.fk_rol_id, user.fk_place_id, user.fk_level_id, u_id]).catch((error) => {
+  	return con.query('UPDATE USER_F SET u_name = $1, u_lastName = $2, u_password = $3, u_image = $4, u_email = $5, u_birthdate = $6, u_points = $7, u_type = $8, fk_rol_id = $9, fk_place_id = $10, fk_level_id = $11 WHERE u_id = $12',
+  	[user.name, user.lastName, user.password, user.image, user.email, user.birthdate, user.points, user.type, user.rolID, user.placeID, user.levelID, u_id]).catch((error) => {
       return new Error(error);
     });
   },

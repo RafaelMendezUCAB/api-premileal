@@ -26,7 +26,7 @@ createBankAccount: (con,bankAccount) => {
 
 updateBankAccount: (con,ba_id,bankAccount) => {
   	return con.query('UPDATE BANK_ACCOUNT SET ba_account_type = $1, ba_routing_number = $2, ba_account_number = $3, ba_check_number = $4, ba_is_primary = $5, u_ba_id = $6 WHERE ba_id = $7',
-  	[bankAccount.ba_account_type,bankAccount.ba_routing_number,bankAccount.ba_account_number,bankAccount.ba_check_number,bankAccount.ba_is_primary,bankAccount.u_ba_id,ba_id]).catch((error) => {
+  	[bankAccount.account_type, bankAccount.routing_number, bankAccount.account_number, bankAccount.check_number, bankAccount.is_primary, bankAccount.userID, ba_id]).catch((error) => {
       return new Error(error);
     });
   },

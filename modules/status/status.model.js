@@ -25,8 +25,8 @@ createStatus: (con,status) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateStatus: (con,sta_id,status) => {
-  	return con.query('UPDATE STATUS SET sta_name = $1,sta_description = $2 WHERE sta_id = $3',
-  	[status.sta_name,status.sta_description,sta_id]).catch((error) => {
+  	return con.query('UPDATE STATUS SET sta_name = $1, sta_description = $2 WHERE sta_id = $3',
+  	[status.name, status.description, sta_id]).catch((error) => {
       return new Error(error);
     });
   },

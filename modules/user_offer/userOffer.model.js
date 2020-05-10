@@ -25,8 +25,8 @@ createUserOffer: (con,userOffer) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateUserOffer: (con,uo_id,userOffer) => {
-  	return con.query('UPDATE USER_OFFER SET o_uo_id = $1, u_uo_id = $2, pro_uo_id = $3 WHERE uo_id = $4',
-  	[userOffer.o_uo_id,userOffer.u_uo_id,userOffer.pro_uo_id,uo_id]).catch((error) => {
+  	return con.query('UPDATE USER_OFFER SET fk_offer_id = $1, fk_user_id = $2, fk_product_id = $3 WHERE uo_id = $4',
+  	[userOffer.offerID, userOffer.userID, userOffer.productID, uo_id]).catch((error) => {
       return new Error(error);
     });
   },

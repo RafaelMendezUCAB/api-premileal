@@ -25,8 +25,8 @@ createInvoice: (con,invoice) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateInvoice: (con,i_id,invoice) => {
-  	return con.query('UPDATE INVOICE SET i_units = $1,i_amount = $2,i_service_commission = $3,i_pasarela_commission = $4 WHERE i_id = $5',
-  	[invoice.i_units,invoice.i_amount,invoice.i_service_commission,invoice.i_pasarela_commission,i_id]).catch((error) => {
+  	return con.query('UPDATE INVOICE SET i_units = $1, i_amount = $2, i_service_commission = $3, i_gateway_commission = $4 WHERE i_id = $5',
+  	[invoice.units, invoice.amount, invoice.service_commission, invoice.gateway_commission, i_id]).catch((error) => {
       return new Error(error);
     });
   },

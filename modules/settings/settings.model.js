@@ -25,8 +25,8 @@ createSettings: (con,settings) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateSettings: (con,set_id,settings) => {
-  	return con.query('UPDATE SETTINGS SET set_service_commission = $1,set_gateway_commission = $2,set_dolar_value = $3,set_gold_income = $4 WHERE set_id = $5',
-  	[settings.set_service_commission,settings.set_gateway_commission,settings.set_dolar_value,settings.set_gold_income,set_id]).catch((error) => {
+  	return con.query('UPDATE SETTINGS SET set_service_commission = $1, set_gateway_commission = $2, set_dolar_value = $3, set_gold_income = $4 WHERE set_id = $5',
+  	[settings.service_commission, settings.gateway_commission, settings.dolar_value, settings.gold_income, set_id]).catch((error) => {
       return new Error(error);
     });
   },

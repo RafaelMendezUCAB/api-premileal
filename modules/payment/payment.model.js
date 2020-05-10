@@ -25,8 +25,8 @@ createPayment: (con,payment) => {
 /* -------------------------- PUT ---------------------------- */
 
 updatePayment: (con,pay_id,payment) => {
-  	return con.query('UPDATE PAYMENT SET pay_amount = $1, pay_res_cod = $2, pay_description = $3, u_pay_id = $4, ba_pay_id = $5, i_pay_id = $6 WHERE pay_id = $7',
-  	[payment.pay_amount,payment.pay_res_cod,payment.pay_description,payment.u_pay_id,payment.ba_pay_id,payment.i_pay_id,pay_id]).catch((error) => {
+  	return con.query('UPDATE PAYMENT SET pay_amount = $1, pay_res_cod = $2, pay_description = $3, fk_user_id = $4, fk_bank_account_id = $5, WHERE pay_id = $6',
+  	[payment.pay_amount, payment.pay_res_cod, payment.pay_description, payment.u_pay_id, payment.ba_pay_id, pay_id]).catch((error) => {
       return new Error(error);
     });
   },

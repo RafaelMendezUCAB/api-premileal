@@ -25,8 +25,8 @@ createValidation: (con,validation) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateValidation: (con,v_id,validation) => {
-  	return con.query('UPDATE VALIDATION SET v_payment_1 = $1, v_payment_2 = $2, v_date = $3, u_v_id = $4, ba_v_id = $5 WHERE v_id = $6',
-  	[validation.v_payment_1,validation.v_payment_2,validation.v_date,validation.u_v_id,validation.ba_v_id,v_id]).catch((error) => {
+  	return con.query('UPDATE VALIDATION SET v_payment_1 = $1, v_payment_2 = $2, v_date = $3, fk_user_id = $4, fk_bank_account_id = $5 WHERE v_id = $6',
+  	[validation.payment_1, validation.payment_2, validation.date, validation.userID, validation.bankID, v_id]).catch((error) => {
       return new Error(error);
     });
   },

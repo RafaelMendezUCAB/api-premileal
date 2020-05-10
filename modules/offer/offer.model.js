@@ -25,8 +25,8 @@ createOffer: (con,offer) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateOffer: (con,o_id,offer) => {
-  	return con.query('UPDATE OFFER SET o_name = $1,o_valid_through = $2,o_percentage = $3 WHERE o_id = $4',
-  	[offer.o_name,offer.o_valid_through,offer.o_percentage,o_id]).catch((error) => {
+  	return con.query('UPDATE OFFER SET o_name = $1, o_valid_through = $2, o_percentage = $3 WHERE o_id = $4',
+  	[offer.name, offer.valid_through, offer.percentage, o_id]).catch((error) => {
       return new Error(error);
     });
   },

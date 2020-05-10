@@ -25,8 +25,8 @@ createLevel: (con,level) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateLevel: (con,l_id,level) => {
-  	return con.query('UPDATE LEVEL SET l_name = $1,l_percentage = $2,l_bonus = $3,l_cost = $4 WHERE l_id = $5',
-  	[level.l_name,level.l_percentage,level.l_bonus,level.l_cost,l_id]).catch((error) => {
+  	return con.query('UPDATE LEVEL SET l_name = $1, l_percentage = $2, l_bonus = $3, l_cost = $4 WHERE l_id = $5',
+  	[level.name, level.percentage, level.bonus, level.cost, l_id]).catch((error) => {
       return new Error(error);
     });
   },

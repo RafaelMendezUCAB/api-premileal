@@ -25,8 +25,8 @@ createHistoricStatus: (con,historicStatus) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateHistoricStatus: (con,hs_id,historicStatus) => {
-  	return con.query('UPDATE HST_STA SET hs_date = $1, uo_hs_id = $2, pay_hs_id = $3, u_hs_id = $4, ba_hs_id = $5, w_hs_id = $6, s_hs_id = $7 WHERE hs_id = $8',
-  	[historicStatus.hs_date,historicStatus.uo_hs_id,historicStatus.pay_hs_id,historicStatus.u_hs_id,historicStatus.ba_hs_id,historicStatus.w_hs_id,historicStatus.s_hs_id,hs_id]).catch((error) => {
+  	return con.query('UPDATE HST_STA SET hs_date = $1, fk_user_offer_id = $2, fk_payment_id = $3, fk_user_id = $4, fk_bank_account_id = $5, fk_withdraw_id = $6, fk_status_id = $7 WHERE hs_id = $8',
+  	[historicStatus.date, historicStatus.userOfferID, historicStatus.paymentID, historicStatus.userID, historicStatus.bankID, historicStatus.withdrawID, historicStatus.statusID, hs_id]).catch((error) => {
       return new Error(error);
     });
   },
