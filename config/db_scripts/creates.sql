@@ -62,10 +62,10 @@ CREATE TABLE USER_F (
 	u_birthdate DATE,
 	u_points INTEGER NOT NULL,
 	u_type VARCHAR(20),
-	fk_rol_id INTEGER NOT NULL,
+	fk_role_id INTEGER NOT NULL,
 	fk_place_id INTEGER,
 	fk_level_id INTEGER NOT NULL,
-	CONSTRAINT fk_rol_id FOREIGN KEY(fk_rol_id) REFERENCES ROLE(r_id),
+	CONSTRAINT fk_role_id FOREIGN KEY(fk_role_id) REFERENCES ROLE(r_id),
 	CONSTRAINT fk_place_id FOREIGN KEY(fk_place_id) REFERENCES PLACE(p_id),
 	CONSTRAINT fk_level_id FOREIGN KEY(fk_level_id) REFERENCES LEVEL(l_id)
 );

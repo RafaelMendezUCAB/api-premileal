@@ -27,7 +27,7 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-createUser: async (req, res, next) => {
+  createUser: async (req, res, next) => {
     const user = req.body;
     let results = await userModel.createUser(req.con, user);
     if (results instanceof Error) {
@@ -39,8 +39,19 @@ createUser: async (req, res, next) => {
     }
   },
 
+  registerUser: async (req, res, next) => {
+    let results = await userModel.registerUser(req.con, req.body);
+    if (results instanceof Error) {
+      logger.error('Error in module "user" (POST /singup)');
+      next(createError(500, "Error. Couldn't register user in Database."));
+    } else {
+      logger.info("User registered.");
+      res.send('User registered successfully');
+    }
+  },
+
 /* -------------------------- PUT ---------------------------- */
-updateUser: async (req, res, next) => {
+  updateUser: async (req, res, next) => {
     const user = req.body;
     let results = await userModel.updateUser(req.con, req.params.id, user);
     if (results instanceof Error) {
