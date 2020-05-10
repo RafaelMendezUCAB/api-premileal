@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createValidation: (con,validation) => {
-  	return con.query('INSERT INTO VALIDATION(v_payment_1,v_payment_2,v_date,u_v_id,ba_v_id) VALUES($1,$2,$3,$4,$5)',
-  	[validation.v_payment_1,validation.v_payment_2,validation.v_date,validation.u_v_id,validation.ba_v_id]).catch((error) => {
+  	return con.query('INSERT INTO VALIDATION(v_payment_1, v_payment_2, v_date, fk_user_id, fk_bank_account_id) VALUES($1,$2,now(),$3,$4)',
+  	[validation.payment1, validation.payment2, validation.userID, validation.bankID]).catch((error) => {
       return new Error(error);
     });
   },

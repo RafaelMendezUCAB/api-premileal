@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createStatus: (con,status) => {
-  	return con.query('INSERT INTO STATUS(sta_name,sta_description) VALUES($1,$2)',
-  	[status.sta_name,status.sta_description]).catch((error) => {
+  	return con.query('INSERT INTO STATUS(sta_name, sta_description) VALUES($1,$2)',
+  	[status.name, status.description]).catch((error) => {
       return new Error(error);
     });
   },

@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createLevel: (con,level) => {
-  	return con.query('INSERT INTO LEVEL(l_name,l_percentage,l_bonus,l_cost) VALUES($1,$2,$3,$4)',
-  	[level.l_name,level.l_percentage,level.l_bonus,level.l_cost]).catch((error) => {
+  	return con.query('INSERT INTO LEVEL(l_name, l_percentage, l_bonus, l_cost) VALUES($1,$2,$3,$4)',
+  	[level.name, level.percentage, level.bonus, level.cost]).catch((error) => {
       return new Error(error);
     });
   },

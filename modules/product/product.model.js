@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createProduct: (con,product) => {
-  	return con.query('INSERT INTO PRODUCT(pro_name,pro_code) VALUES($1,$2)',
-  	[product.pro_name,product.pro_code]).catch((error) => {
+  	return con.query('INSERT INTO PRODUCT(pro_name, pro_code) VALUES($1,$2)',
+  	[product.name, product.code]).catch((error) => {
       return new Error(error);
     });
   },

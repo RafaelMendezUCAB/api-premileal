@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createOffer: (con,offer) => {
-  	return con.query('INSERT INTO OFFER(o_name,o_valid_through,o_percentage) VALUES($1,$2,$3)',
-  	[offer.o_name,offer.o_valid_through,offer.o_percentage]).catch((error) => {
+  	return con.query('INSERT INTO OFFER(o_name, o_valid_through, o_percentage) VALUES($1,$2,$3)',
+  	[offer.name, offer.valid_through, offer.percentage]).catch((error) => {
       return new Error(error);
     });
   },

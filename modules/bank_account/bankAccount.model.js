@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createBankAccount: (con,bankAccount) => {
-  	return con.query('INSERT INTO BANK_ACCOUNT(ba_account_type,ba_routing_number,ba_account_number,ba_check_number,ba_is_primary,u_ba_id) VALUES($1,$2,$3,$4,$5,$6)',
-  	[bankAccount.ba_account_type,bankAccount.ba_routing_number,bankAccount.ba_account_number,bankAccount.ba_check_number,bankAccount.ba_is_primary,bankAccount.u_ba_id]).catch((error) => {
+  	return con.query('INSERT INTO BANK_ACCOUNT(ba_account_type, ba_routing_number, ba_account_number, ba_check_number, ba_is_primary, fk_user_id) VALUES($1,$2,$3,$4,$5,$6)',
+  	[bankAccount.account_type, bankAccount.routing_number, bankAccount.account_number, bankAccount.check_number, bankAccount.is_primary, bankAccount.userID]).catch((error) => {
       return new Error(error);
     });
   },

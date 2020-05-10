@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createUserOffer: (con,userOffer) => {
-  	return con.query('INSERT INTO USER_OFFER(o_uo_id,u_uo_id,pro_uo_id) VALUES($1,$2,$3)',
-  	[userOffer.o_uo_id,userOffer.u_uo_id,userOffer.pro_uo_id]).catch((error) => {
+  	return con.query('INSERT INTO USER_OFFER(fk_offer_id, fk_user-id, fk_product_id) VALUES($1,$2,$3)',
+  	[userOffer.offerID, userOffer.userID, userOffer.productID]).catch((error) => {
       return new Error(error);
     });
   },

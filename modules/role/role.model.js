@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createRole: (con,role) => {
-  	return con.query('INSERT INTO ROLE(r_name,r_description) VALUES($1,$2)',
-  	[role.r_name,role.r_description]).catch((error) => {
+  	return con.query('INSERT INTO ROLE(r_name, r_description) VALUES($1,$2)',
+  	[role.name, role.description]).catch((error) => {
       return new Error(error);
     });
   },

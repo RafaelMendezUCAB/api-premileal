@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createSettings: (con,settings) => {
-  	return con.query('INSERT INTO SETTINGS(set_service_commission,set_gateway_commission,set_dolar_value,set_gold_income) VALUES($1,$2,$3,$4)',
-  	[settings.set_service_commission,settings.set_gateway_commission,settings.set_dolar_value,settings.set_gold_income]).catch((error) => {
+  	return con.query('INSERT INTO SETTINGS(set_service_commission, set_gateway_commission, set_dolar_value, set_gold_income) VALUES($1,$2,$3,$4)',
+  	[settings.service_commission, settings.gateway_commission, settings.dolar_value, settings.gold_income]).catch((error) => {
       return new Error(error);
     });
   },

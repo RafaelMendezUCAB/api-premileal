@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createPlace: (con,place) => {
-  	return con.query('INSERT INTO PLACE(p_name,p_type,fk_place) VALUES($1,$2,$3)',
-  	[place.p_name,place.p_type,place.fk_place]).catch((error) => {
+  	return con.query('INSERT INTO PLACE(p_name, p_type, fk_place) VALUES($1,$2,$3)',
+  	[place.name, place.type, place.fk_place]).catch((error) => {
       return new Error(error);
     });
   },

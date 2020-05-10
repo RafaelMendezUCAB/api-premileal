@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createHistoricStatus: (con,historicStatus) => {
-  	return con.query('INSERT INTO HST_STA(hs_date,uo_hs_id,pay_hs_id,u_hs_id,ba_hs_id,w_hs_id,s_hs_id) VALUES($1,$2,$3,$4,$5,$6,$7)',
-  	[historicStatus.hs_date,historicStatus.uo_hs_id,historicStatus.pay_hs_id,historicStatus.u_hs_id,historicStatus.ba_hs_id,historicStatus.w_hs_id,historicStatus.s_hs_id]).catch((error) => {
+  	return con.query('INSERT INTO HST_STA(hs_date, fk_user_offer_id, fk_payment_id, fk_user_id, fk_bank_account_id, fk_withdraw_id, fk_status_id) VALUES($1,$2,$3,$4,$5,$6,$7)',
+  	[historicStatus.date, historicStatus.userOfferID, historicStatus.paymentID, historicStatus.userID, historicStatus.bankID, historicStatus.withdrawID, historicStatus.statusID]).catch((error) => {
       return new Error(error);
     });
   },

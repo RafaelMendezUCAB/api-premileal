@@ -16,8 +16,8 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
 
 createPayment: (con,payment) => {
-  	return con.query('INSERT INTO PAYMENT(pay_amount,pay_res_cod,pay_description,u_pay_id,ba_pay_id,i_pay_id) VALUES($1,$2,$3,$4,$5,$6)',
-  	[payment.pay_amount,payment.pay_res_cod,payment.pay_description,payment.u_pay_id,payment.ba_pay_id,payment.i_pay_id]).catch((error) => {
+  	return con.query('INSERT INTO PAYMENT(pay_amount, pay_res_cod, pay_description, fk_user_id, fk_bank_account,) VALUES($1,$2,$3,$4,$5)',
+  	[payment.amount, payment.res_code, payment.description, payment.userID, payment.bankID,]).catch((error) => {
       return new Error(error);
     });
   },
