@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getLevel: async (req, res, next) => {
-    let results = await levelModel.getLevel(req.con,req.params.id);
+    let results = await levelModel.getLevel(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "level" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain level from database."));
@@ -29,7 +29,7 @@ module.exports = {
 /* ------------------------- POST --------------------------- */
 createLevel: async (req, res, next) => {
     const level = req.body;
-    let results = await levelModel.createLevel(req.con,level);
+    let results = await levelModel.createLevel(req.con, level);
     if (results instanceof Error) {
       logger.error('Error in module "level" (POST /create)');
       next(createError(500, "Error. Could't create level from database."));
@@ -42,7 +42,7 @@ createLevel: async (req, res, next) => {
 /* -------------------------- PUT ---------------------------- */
   updateLevel: async (req, res, next) => {
     const level = req.body;
-    let results = await levelModel.updateLevel(req.con,req.params.id,level);
+    let results = await levelModel.updateLevel(req.con, req.params.id, level);
     if (results instanceof Error) {
       logger.error(`Error in module "level" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update level from database."));
@@ -54,7 +54,7 @@ createLevel: async (req, res, next) => {
 
 /* ------------------------- DELETE -------------------------- */
   deleteLevel: async (req, res, next) => {
-    let results = await levelModel.deleteLevel(req.con,req.params.id);
+    let results = await levelModel.deleteLevel(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "level" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove level from database."));

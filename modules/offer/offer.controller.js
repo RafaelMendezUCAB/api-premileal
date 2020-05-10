@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getOffer: async (req, res, next) => {
-    let results = await offerModel.getOffer(req.con,req.params.id);
+    let results = await offerModel.getOffer(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "offer" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain offer from database."));
@@ -29,7 +29,7 @@ module.exports = {
 /* ------------------------- POST --------------------------- */
 createOffer: async (req, res, next) => {
     const offer = req.body;
-    let results = await offerModel.createOffer(req.con,offer);
+    let results = await offerModel.createOffer(req.con, offer);
     if (results instanceof Error) {
       logger.error('Error in module "offer" (POST /create)');
       next(createError(500, "Error. Could't create offer from database."));
@@ -42,7 +42,7 @@ createOffer: async (req, res, next) => {
 /* -------------------------- PUT ---------------------------- */
 updateOffer: async (req, res, next) => {
     const offer = req.body;
-    let results = await offerModel.updateOffer(req.con,req.params.id,offer);
+    let results = await offerModel.updateOffer(req.con, req.params.id, offer);
     if (results instanceof Error) {
       logger.error(`Error in module "offer" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update offer from database."));
@@ -54,7 +54,7 @@ updateOffer: async (req, res, next) => {
 
 /* ------------------------- DELETE -------------------------- */
   deleteOffer: async (req, res, next) => {
-    let results = await offerModel.deleteOffer(req.con,req.params.id);
+    let results = await offerModel.deleteOffer(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "offer" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove offer from database."));

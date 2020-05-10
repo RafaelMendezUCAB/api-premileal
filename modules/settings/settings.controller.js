@@ -16,7 +16,7 @@ module.exports = {
   },
 
   getSetting: async (req, res, next) => {
-    let results = await settingsModel.getSetting(req.con,req.params.id);
+    let results = await settingsModel.getSetting(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "settings" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain settings from database."));
@@ -29,7 +29,7 @@ module.exports = {
 /* ------------------------- POST --------------------------- */
 createSettings: async (req, res, next) => {
     const settings = req.body;
-    let results = await settingsModel.createSettings(req.con,settings);
+    let results = await settingsModel.createSettings(req.con, settings);
     if (results instanceof Error) {
       logger.error('Error in module "settings" (POST /create)');
       next(createError(500, "Error. Could't create settings from database."));
@@ -42,7 +42,7 @@ createSettings: async (req, res, next) => {
 /* -------------------------- PUT ---------------------------- */
 updateSettings: async (req, res, next) => {
     const settings = req.body;
-    let results = await settingsModel.updateSettings(req.con,req.params.id,settings);
+    let results = await settingsModel.updateSettings(req.con, req.params.id, settings);
     if (results instanceof Error) {
       logger.error(`Error in module "settings" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update settings from database."));
@@ -54,7 +54,7 @@ updateSettings: async (req, res, next) => {
 
 /* ------------------------- DELETE -------------------------- */
   deleteSettings: async (req, res, next) => {
-    let results = await settingsModel.deleteSettings(req.con,req.params.id);
+    let results = await settingsModel.deleteSettings(req.con, req.params.id);
     if (results instanceof Error) {
       logger.error(`Error in module "settings" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove settings from database."));

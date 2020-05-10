@@ -7,15 +7,15 @@ module.exports = {
     });
   },
 
-  getOffer: (con,o_id) => {
-  	return con.query('SELECT * FROM OFFER WHERE o_id = $1',[o_id]).catch((error) => {
+  getOffer: (con, offerID) => {
+  	return con.query('SELECT * FROM OFFER WHERE o_id = $1', [offerID]).catch((error) => {
       return new Error(error);
     });
   },
 
 /* ------------------------- POST -------------------------- */
 
-createOffer: (con,offer) => {
+createOffer: (con, offer) => {
   	return con.query('INSERT INTO OFFER(o_name, o_valid_through, o_percentage) VALUES($1,$2,$3)',
   	[offer.name, offer.valid_through, offer.percentage]).catch((error) => {
       return new Error(error);
@@ -24,16 +24,16 @@ createOffer: (con,offer) => {
 
 /* -------------------------- PUT ---------------------------- */
 
-updateOffer: (con,o_id,offer) => {
+updateOffer: (con, offerID, offer) => {
   	return con.query('UPDATE OFFER SET o_name = $1, o_valid_through = $2, o_percentage = $3 WHERE o_id = $4',
-  	[offer.name, offer.valid_through, offer.percentage, o_id]).catch((error) => {
+  	[offer.name, offer.valid_through, offer.percentage, offerID]).catch((error) => {
       return new Error(error);
     });
   },
 /* ------------------------- DELETE -------------------------- */
 
-  deleteOffer: (con,o_id) => {
-  	return con.query('DELETE FROM OFFER WHERE o_id = $1',[o_id]).catch((error) => {
+  deleteOffer: (con, offerID) => {
+  	return con.query('DELETE FROM OFFER WHERE o_id = $1', [offerID]).catch((error) => {
       return new Error(error);
     });
   },
