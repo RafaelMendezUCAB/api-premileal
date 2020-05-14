@@ -44,9 +44,16 @@ module.exports = {
   },
 
 /* -------------------------- PUT ---------------------------- */
-updateUser: (con, userID, user) => {
+  updateUser: (con, userID, user) => {
   	return con.query('UPDATE USER_F SET u_name = $1, u_lastName = $2, u_password = $3, u_image = $4, u_email = $5, u_birthdate = $6, u_points = $7, u_type = $8, fk_role_id = $9, fk_place_id = $10, fk_level_id = $11 WHERE u_id = $12',
   	[user.name, user.lastName, user.password, user.image, user.email, user.birthdate, user.points, user.type, user.rolID, user.placeID, user.levelID, userID]).catch((error) => {
+      return new Error(error);
+    });
+  },
+
+  updatePoints: (con, userID, userPoints) => {
+    return con.query('UPDATE USER_F SET u_points = $1 WHERE u_id = $2',
+    [userPoints.points, userID]).catch((error) => {
       return new Error(error);
     });
   },

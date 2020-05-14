@@ -15,6 +15,7 @@ router.post("/signup", /*auth.validateToken,*/ userController.registerUser); // 
 
 /* -------------------------- PUT ---------------------------- */
 router.put("/update/:id", /*auth.validateToken ,*/ userController.updateUser);
+router.put('/points/:id', /*auth.validateToken,*/ userController.updatePoints);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ userController.deleteUser);
