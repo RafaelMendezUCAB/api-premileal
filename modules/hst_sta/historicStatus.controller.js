@@ -50,6 +50,15 @@ module.exports = {
         logger.info("User blocked.");
         res.json(results);
       } 
+    } else {
+      let results = await historicStatusModel.createUserStatus(req.con, req.params.idUser, userStatus);
+      if (results instanceof Error) {
+        logger.error(`Error in module "HistoricStatus" (POST /userStatus/${req.params.idUser})`);
+        next(createError(500, `Error. Could't activate user account ${req.params.idUser} from database.`));
+      } else {
+        logger.info("Activated user account.");
+        res.json(results);
+      } 
     }
   },
 
