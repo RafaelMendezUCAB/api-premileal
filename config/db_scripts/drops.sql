@@ -18,4 +18,4 @@ DROP TABLE ROLE;
 
 /* Eliminar la base de datos */
 
-DROP DATABASE consorsio_fid_3
+DROP DATABASE PREMILEAL
