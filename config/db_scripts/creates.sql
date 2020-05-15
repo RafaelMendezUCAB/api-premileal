@@ -62,6 +62,7 @@ CREATE TABLE USER_F (
 	u_birthdate DATE,
 	u_points INTEGER NOT NULL,
 	u_type VARCHAR(20),
+	u_blocked BOOLEAN NOT NULL,
 	fk_role_id INTEGER NOT NULL,
 	fk_place_id INTEGER,
 	fk_level_id INTEGER NOT NULL,
