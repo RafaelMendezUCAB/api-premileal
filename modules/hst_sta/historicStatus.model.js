@@ -23,8 +23,8 @@ module.exports = {
   },
 
   createUserStatus: (con, userID, userStatus) => {
-    return con.query('INSERT INTO HST_STA(hs_date, fk_user_offer_id, fk_payment_id, fk_user_id, fk_bank_account_id, fk_withdraw_id, fk_status_id) VALUES($1,$2,$3,$4,$5,$6,$7)',
-    [userStatus.date, userStatus.userOfferID, userStatus.paymentID, userID, userStatus.bankAccountID, userStatus.withdrawID, userStatus.statusID]).catch((error) => {
+    return con.query('INSERT INTO HST_STA(hs_date, fk_user_id, fk_status_id) VALUES(now(),$1,$2)',
+    [userID, userStatus.statusID]).catch((error) => {
       return new Error(error);
     });
   },

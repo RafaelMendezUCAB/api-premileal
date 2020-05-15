@@ -50,7 +50,7 @@ module.exports = {
         logger.info("User blocked.");
         res.json(results);
       } 
-    } 
+    }
   },
 
 
