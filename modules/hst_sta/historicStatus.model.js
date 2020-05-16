@@ -29,6 +29,13 @@ module.exports = {
     });
   },
 
+  createBankAccountStatus: (con, bankAccountID, bankAccountStatus) => {
+    return con.query('INSERT INTO HST_STA(hs_date, fk_bank_account_id, fk_status_id) VALUES(now(),$1,$2)',
+    [bankAccountID, bankAccountStatus.statusID]).catch((error) => {
+      return new Error(error);
+    });
+  },
+
 /* -------------------------- PUT ---------------------------- */
 
   updateHistoricStatus: (con, historicStatusID, historicStatus) => {
