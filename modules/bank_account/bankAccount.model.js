@@ -13,6 +13,12 @@ module.exports = {
     });
   },
 
+  getAllUserBankAccounts: (con, UserID) => {
+    return con.query('SELECT ba_account_type as account_type, ba_routing_number as routing_number, ba_account_number as account_number, ba_check_number as check_number, ba_is_primary as is_primary FROM BANK_ACCOUNT WHERE fk_user_id = $1', [UserID]).catch((error) => {
+      return new Error(error);
+    });
+  },
+
 /* ------------------------- POST -------------------------- */
 
   createBankAccount: (con, bankAccount) => {

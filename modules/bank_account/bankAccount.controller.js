@@ -26,6 +26,17 @@ module.exports = {
     }
   },
 
+  getAllUserBankAccounts: async (req, res, next) => {
+    let results = await bankAccountModel.getAllUserBankAccounts(req.con, req.params.idUser);
+    if (results instanceof Error) {
+      logger.error(`Error in module "BankAccount" (GET bankAccount/all/${req.params.idUser})`);
+      next(createError(500, "Error. Couldn't obtain bank accounts from database."));
+    } else {
+      logger.info(`List of registered bank accounts in the user ${req.params.idUser}.`);
+      res.json(results);
+    }
+  },
+
 /* ------------------------- POST --------------------------- */
 createBankAccount: async (req, res, next) => {
     const bankAccount = req.body;
