@@ -62,6 +62,19 @@ module.exports = {
     }
   },
 
+  createBankAccountStatus: async (req, res, next) => {
+    const bankAccountStatus = req.body;
+    if (bankAccountStatus.statusID == 4) {
+      let results = await historicStatusModel.createBankAccountStatus(req.con, req.params.idBankAccount, bankAccountStatus);
+      if (results instanceof Error) {
+        logger.error(`Error in module "HistoricStatus" (POST /bankAccountStatus/${req.params.idBankAccount})`);
+        next(createError(500, "Error. Could't lock the bank account from database."));
+      } else {
+        logger.info("Bank account blocked.");
+        res.json(results);
+      } 
+    } 
+  },
 
 /* -------------------------- PUT ---------------------------- */
   updateHistoricStatus: async (req, res, next) => {
