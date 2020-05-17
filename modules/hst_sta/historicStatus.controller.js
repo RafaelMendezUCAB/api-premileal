@@ -73,6 +73,15 @@ module.exports = {
         logger.info("Bank account blocked.");
         res.json(results);
       } 
+    } else {
+      let results = await historicStatusModel.createBankAccountStatus(req.con, req.params.idBankAccount, bankAccountStatus);
+      if (results instanceof Error) {
+        logger.error(`Error in module "HistoricStatus" (POST /bankAccountStatus/${req.params.idBankAccount})`);
+        next(createError(500, "Error. Could't activate the bank account from database."));
+      } else {
+        logger.info("Bank account activated.");
+        res.json(results);
+      } 
     } 
   },
 
