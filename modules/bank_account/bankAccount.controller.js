@@ -77,7 +77,7 @@ createBankAccount: async (req, res, next) => {
 
 /* ------------------------- DELETE -------------------------- */
   deleteBankAccount: async (req, res, next) => {
-    let results = await bankAccountModel.deleteBankAccount(req.con, req.params.id);
+    let results = await bankAccountModel.deleteBankAccount(req.con, req.params.id, req.body);
     if (results instanceof Error) {
       logger.error(`Error in module "BankAccount" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove bank account from database."));
