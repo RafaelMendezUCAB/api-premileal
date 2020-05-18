@@ -63,6 +63,18 @@ createBankAccount: async (req, res, next) => {
     }
   },
 
+  verifyBankAccount: async (req, res, next) => {
+    const bankAccount = req.body;
+    let results = await bankAccountModel.verifyBankAccount(req.con, req.params.id, bankAccount);
+    if (results instanceof Error) {
+      logger.error(`Error in module "BankAccount" (PUT /verify/${req.params.id})`);
+      next(createError(500, "Error. Could't verify bank account."));
+    } else {
+      logger.info("Verified bank account.");
+      res.json(results);
+    }
+  },
+
 /* ------------------------- DELETE -------------------------- */
   deleteBankAccount: async (req, res, next) => {
     let results = await bankAccountModel.deleteBankAccount(req.con, req.params.id);
