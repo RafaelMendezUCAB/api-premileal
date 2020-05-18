@@ -110,9 +110,33 @@ module.exports = {
   },
 /* ------------------------- DELETE -------------------------- */
 
-  deleteBankAccount: (con, bankAccountID) => {
-  	return con.query('DELETE FROM BANK_ACCOUNT WHERE ba_id = $1', [bankAccountID]).catch((error) => {
-      return new Error(error);
-    });
+  deleteBankAccount: async (con, bankAccountID, bankAccount) => {
+
+    try {
+      
+      const deletedBankAccount = await stripe.customers.deleteSource(
+        //'cus_HIXY7Ud6FbcSCk',
+        //'ba_1GfukjBDr8hNIY5zpcHhp38y', 
+        bankAccount.customer,
+        bankAccount.stripeID           
+        );
+    
+      const deletedConnectBankAccount = await stripe.accounts.deleteExternalAccount(
+          //'acct_1GcuLfBDr8hNIY5z',
+          //'ba_1GfukjBDr8hNIY5zpcHhp38y',  
+          bankAccount.stripeConnectUserAccountID,
+          bankAccount.stripeConnectBankAccountID              
+        );
+
+      return con.query('DELETE FROM BANK_ACCOUNT WHERE ba_id = $1', [bankAccountID]).catch((error) => {
+        console.log(error);
+        return new Error(error);
+      });
+
+    } catch (error) {
+      console.dir(error);
+      return "Bank Account couldn't be deleted.";
+    }
+  	
   },
 };
