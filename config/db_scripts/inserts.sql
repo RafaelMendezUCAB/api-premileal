@@ -1,14 +1,17 @@
 /* ROLE INSERTS */
-INSERT INTO ROLE(r_name,r_description) VALUES('client','Premileal customers.');
-INSERT INTO ROLE(r_name,r_description) VALUES('administrator','Back-Office users.');
+INSERT INTO ROLE(r_name, r_description) VALUES('client','Premileal customers.');
+INSERT INTO ROLE(r_name, r_description) VALUES('administrator','Back-Office users.');
 
 /* STATUS INSERTS */ 
-INSERT INTO STATUS(sta_name,sta_description) VALUES('unverified','Bank account not available for use.');
-INSERT INTO STATUS(sta_name,sta_description) VALUES('verified','Bank account available for use.');
-INSERT INTO STATUS(sta_name,sta_description) VALUES('rejected','Bank account has been rejected.');
-INSERT INTO STATUS(sta_name,sta_description) VALUES('blocked','Account blocked.');
-INSERT INTO STATUS(sta_name,sta_description) VALUES('online','User is online.');
-INSERT INTO STATUS(sta_name,sta_description) VALUES('offline','User is offline.');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('unverified','Bank account not available for use.');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('verified','Bank account available for use.');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('rejected','Bank account has been rejected.');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('blocked','Account blocked.');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('online','User is online.');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('offline','User is offline.');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('in process', 'Payment is being processed');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('approved', 'Payment has been approved');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('failed', 'Payment couldn\'t be proccesed');
 
 /* LEVELS INSERTS */
 INSERT INTO LEVEL(l_name, l_percentage, l_bonus, l_cost) VALUES('Basic', 0, 0, 0);

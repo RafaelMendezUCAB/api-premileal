@@ -37,6 +37,17 @@ module.exports = {
     }
   },
 
+  getBankAccountStatus: async (req, res, next) => {
+    let results = await bankAccountModel.getBankAccountStatus(req.con, req.params.bankAccountID);
+    if (results instanceof Error) {
+      logger.error(`Error in module "BankAccount" (GET /status/${req.params.bankID})`);
+      next(createError(500, "Error. Couldn't obtain bank status from database."));
+    } else {
+      logger.info(`Bank account status retreived successfully.`);
+      res.json(results);
+    }
+  },
+
 /* ------------------------- POST --------------------------- */
 createBankAccount: async (req, res, next) => {
     const bankAccount = req.body;
