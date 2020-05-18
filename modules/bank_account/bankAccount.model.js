@@ -90,7 +90,7 @@ module.exports = {
 
   verifyBankAccount: async (con, bankAccountID, bankAccount) => {
     
-    try {   
+    try {      
 
       const verificationInformation = await stripe.customers.verifySource(
           //'cus_HDyHhHBY9h5ETD',
@@ -100,11 +100,11 @@ module.exports = {
           {amounts: [32, 45]}            
       );
 
-      res.send('Sucessfull validation');
+      return 'Sucessfull validation';
 
   } catch (error) {
       console.dir(error);
-      res.send("Bank Account couldn't be verified.");
+      return "Bank Account couldn't be verified.";
   }
     
   },
