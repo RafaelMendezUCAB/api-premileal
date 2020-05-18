@@ -1,8 +1,9 @@
 const createError = require("http-errors");
 const bankModel = require("./bank.model");
+const logger = require("../../logger");
 
 module.exports = {
-
+/* --------------------------- GET ------------------------- */
     getAllBanks: async (req, res, next) => {
       let results = await bankModel.getAllBanks(req.con);
       if (results instanceof Error) {
@@ -13,5 +14,11 @@ module.exports = {
         res.json(results);
       }
     },
+
+/* ------------------------- POST --------------------------- */
+
+/* -------------------------- PUT ---------------------------- */
+
+/* ------------------------- DELETE -------------------------- */
 
 }
