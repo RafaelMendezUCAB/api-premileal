@@ -87,6 +87,27 @@ module.exports = {
       return new Error(error);
     });
   },
+
+  verifyBankAccount: async (con, bankAccountID, bankAccount) => {
+    
+    try {      
+
+      const verificationInformation = await stripe.customers.verifySource(
+          //'cus_HDyHhHBY9h5ETD',
+          bankAccount.customer,
+          //'ba_1GfYfOBDr8hNIY5zZ61sB1Tq',
+          bankAccountID,
+          {amounts: [32, 45]}            
+      );
+
+      return 'Sucessfull validation';
+
+  } catch (error) {
+      console.dir(error);
+      return "Bank Account couldn't be verified.";
+  }
+    
+  },
 /* ------------------------- DELETE -------------------------- */
 
   deleteBankAccount: (con, bankAccountID) => {

@@ -13,6 +13,7 @@ router.post("/create", /*auth.validateToken ,*/ bankAccountController.createBank
 
 /* -------------------------- PUT ---------------------------- */
 router.put("/update/:id", /*auth.validateToken ,*/ bankAccountController.updateBankAccount);
+router.put("/verify/:id", /*auth.validateToken ,*/ bankAccountController.verifyBankAccount);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ bankAccountController.deleteBankAccount);
