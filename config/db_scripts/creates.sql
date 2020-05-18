@@ -77,6 +77,8 @@ CREATE TABLE USER_F (
 	u_points INTEGER NOT NULL,
 	u_type VARCHAR(20),
 	u_blocked BOOLEAN NOT NULL,
+	u_stripe_id VARCHAR(50) NOT NULL UNIQUE,
+	u_stripe_connect_id VARCHAR(50) NOT NULL UNIQUE
 	fk_role_id INTEGER NOT NULL,
 	fk_place_id INTEGER,
 	fk_level_id INTEGER NOT NULL,
@@ -92,6 +94,8 @@ CREATE TABLE BANK_ACCOUNT (
 	ba_account_number VARCHAR(50) NOT NULL UNIQUE,
 	ba_check_number VARCHAR(50) NOT NULL,
 	ba_is_primary BOOLEAN NOT NULL,
+	ba_stripe_id VARCHAR(50) NOT NULL UNIQUE,
+	ba_stripe_connect_id VARCHAR(50) NOT NULL UNIQUE,
 	fk_user_id INTEGER NOT NULL,
 	CONSTRAINT fk_user_id FOREIGN KEY(fk_user_id) REFERENCES USER_F(u_id)
 );

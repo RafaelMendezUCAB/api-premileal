@@ -1,3 +1,25 @@
+const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
+
+async function createBankAccountToken(bankAccount){
+  try {
+    const bankAccountToken = await stripe.tokens.create(
+        {
+          bank_account: {
+            country: 'US',
+            currency: 'usd',
+            account_holder_name: bankAccount.accountHolderName,
+            account_holder_type: 'individual',
+            routing_number: '110000000',
+            account_number: '000123456789',
+          },
+        }
+    );
+    return bankAccountToken;
+  } catch (error) {
+    return new Error(error);
+  }
+};
+
 module.exports = {
 /* --------------------------- GET ------------------------- */
 
@@ -21,11 +43,40 @@ module.exports = {
 
 /* ------------------------- POST -------------------------- */
 
-  createBankAccount: (con, bankAccount) => {
-  	return con.query('INSERT INTO BANK_ACCOUNT(ba_account_type, ba_routing_number, ba_account_number, ba_check_number, ba_is_primary, fk_user_id) VALUES($1,$2,$3,$4,$5,$6)',
-  	[bankAccount.account_type, bankAccount.routing_number, bankAccount.account_number, bankAccount.check_number, bankAccount.is_primary, bankAccount.userID]).catch((error) => {
+  
+
+  createBankAccount: async (con, bankAccount) => {
+
+    try {      
+      var bankAccountToken = await createBankAccountToken(bankAccount);        
+      var token = bankAccountToken.id;
+      const stripeBankAccount = await stripe.customers.createSource(
+          //'cus_HDyHhHBY9h5ETD',
+          bankAccount.customer,
+          {source: token}, 
+      );
+
+      var bankAccountToken = await createBankAccountToken(bankAccount);        
+      var token = bankAccountToken.id;
+      const stripeConnectBankAccount = await stripe.accounts.createExternalAccount(
+        //'acct_1GftyGApQ49xnzhM',
+        bankAccount.customerConnectAccount,
+        {
+          external_account: token,
+        }            
+    );
+
+      return con.query('INSERT INTO BANK_ACCOUNT(ba_account_type, ba_routing_number, ba_account_number, ba_check_number, ba_is_primary, fk_user_id, ba_stripe_id, ba_stripe_connect_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+  	  [bankAccount.account_type, bankAccount.routing_number, bankAccount.account_number, bankAccount.check_number, bankAccount.is_primary, bankAccount.userID, stripeBankAccount.id, stripeConnectBankAccount.id]).catch((error) => {
+        console.log(error);
+        return new Error(error);
+      });
+
+    } catch (error) {
+      console.log(error);
       return new Error(error);
-    });
+    }
+  	
   },
 
 /* -------------------------- PUT ---------------------------- */

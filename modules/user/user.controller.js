@@ -51,7 +51,7 @@ module.exports = {
 /* ------------------------- POST --------------------------- */
   createUser: async (req, res, next) => {
     const user = req.body;
-    let results = await userModel.createUser(req.con, user);
+    let results = await userModel.createUser(req.con, req.connection.remoteAddress, user);
     if (results instanceof Error) {
       logger.error('Error in module "user" (POST /create)');
       next(createError(500, "Error. Could't create user from database."));

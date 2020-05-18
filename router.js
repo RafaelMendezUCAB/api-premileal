@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Modules
+const bankRouter = require("./modules/bank/bank.router");
 const bankAccountRouter = require("./modules/bank_account/bankAccount.router");
 const historicStatusRouter = require("./modules/hst_sta/historicStatus.router");
 const invoiceRouter = require("./modules/invoice/invoice.router");
@@ -19,7 +20,8 @@ const validationRouter = require("./modules/validation/validation.router");
 const withdrawRouter = require("./modules/withdraw/withdraw.router");
 
 // Routes
-router.use("/bank", bankAccountRouter);
+router.use("/bank", bankRouter);
+router.use("/user/bank/account", bankAccountRouter);
 router.use("/status/historic", historicStatusRouter);
 router.use("/invoice", invoiceRouter);
 router.use("/level", levelRouter);
