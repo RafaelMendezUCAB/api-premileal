@@ -1,3 +1,5 @@
+const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
+
 module.exports = {
   
 /* --------------------------- GET ------------------------- */
@@ -26,11 +28,57 @@ module.exports = {
   },
 
 /* ------------------------- POST -------------------------- */
-  createUser: (con, user) => {
-  	return con.query('INSERT INTO USER_F(u_name, u_lastName, u_password, u_image, u_email, u_birthdate, u_points, u_type, u_blocked, fk_role_id, fk_place_id, fk_level_id) VALUES($1,$2,$3,$4,$5,$6,0,$7,true,1,$8,1)',
-  	[user.name, user.lastName, user.password, user.image, user.email, user.birthdate, user.type, user.placeID]).catch((error) => {
+  createUser: async (con, address, user) => {
+
+    try {
+      const customer = await stripe.customers.create(
+        {
+          description: 'Customer.',
+          email: user.email,
+          name: user.name + ' ' + user.lastName
+        }            
+      );
+    
+      const account = await stripe.accounts.create(
+        {              
+          type: 'custom',
+          country: 'US',
+          requested_capabilities: [
+            'transfers',
+          ],
+          business_type: 'individual',
+          individual: {
+            first_name: user.name,
+            last_name: user.lastName
+          },
+          business_profile: {
+            url: user.name + '.com'
+        },
+          metadata: {
+            customer_id: customer.id
+          }
+        }        
+      );
+
+      const accountToS = await stripe.accounts.update(
+          account.id,
+          {
+            tos_acceptance: {
+              date: Math.floor(Date.now() / 1000),
+              ip: address, // Assumes you're not using a proxy
+            },
+          }
+      );
+
+      return con.query('INSERT INTO USER_F(u_name, u_lastName, u_password, u_image, u_email, u_birthdate, u_points, u_type, u_blocked, fk_role_id, fk_place_id, fk_level_id, u_stripe_id, u_stripe_connect_id) VALUES($1, $2, $3, $4, $5, $6, 0, $7, true, 1, $8, 1, $9, $10)',
+      [user.name, user.lastName, user.password, user.image, user.email, user.birthdate, user.type, user.placeID, customer.id, account.id]).catch((error) => {
+        return new Error(error);
+      });
+
+    } catch (error) {
       return new Error(error);
-    });
+    }
+  	
   },
 
   registerUser: (con, user) => {
