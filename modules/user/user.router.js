@@ -6,13 +6,16 @@ const auth = require("../../middlewares/auth");
 /* --------------------------- GET ------------------------- */
 router.get("/all", /*auth.validateToken ,*/ userController.getAllUsers);
 router.get("/:id", /*auth.validateToken ,*/ userController.getUser);
+router.get('/login/:email/:password', /*auth.validateToken,*/ userController.login);
+router.get('/login/social/:email/:type', /*auth.validateToken,*/ userController.socialLogin);
 
 /* ------------------------- POST -------------------------- */
 router.post("/create", /*auth.validateToken ,*/ userController.createUser);
-router.post("/signup", /*auth.validateToken,*/ userController.registerUser);
+router.post("/signup", /*auth.validateToken,*/ userController.registerUser); // works for both: federated and not federated.
 
 /* -------------------------- PUT ---------------------------- */
 router.put("/update/:id", /*auth.validateToken ,*/ userController.updateUser);
+router.put('/points/:id', /*auth.validateToken,*/ userController.updatePoints);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ userController.deleteUser);

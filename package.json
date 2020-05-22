@@ -33,6 +33,7 @@
     "jwt-simple": "^0.5.6",
     "moment": "^2.24.0",
     "pg-promise": "^10.5.2",
+    "stripe": "^8.52.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {

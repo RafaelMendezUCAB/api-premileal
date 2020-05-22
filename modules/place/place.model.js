@@ -15,18 +15,18 @@ module.exports = {
 
 /* ------------------------- POST -------------------------- */
 
-createPlace: (con, place) => {
-  	return con.query('INSERT INTO PLACE(p_name, p_type, fk_place_id) VALUES($1,$2,$3)',
-  	[place.name, place.type, place.fk_place]).catch((error) => {
+  createPlace: (con, place) => {
+  	return con.query('INSERT INTO PLACE(p_acronym, p_name, p_type, fk_place_id) VALUES($1,$2,$3,$4)',
+  	[place.acronym, place.name, place.type, place.fk_place]).catch((error) => {
       return new Error(error);
     });
   },
 
 /* -------------------------- PUT ---------------------------- */
 
-updatePlace: (con, placeID, place) => {
-  	return con.query('UPDATE PLACE SET p_name = $1, p_type = $2, fk_place_id = $3 WHERE p_id = $4',
-  	[place.name, place.type, place.fk_place, placeID]).catch((error) => {
+  updatePlace: (con, placeID, place) => {
+  	return con.query('UPDATE PLACE SET p_acronym = $1, p_name = $2, p_type = $3, fk_place_id = $4 WHERE p_id = $5',
+  	[place.acronym, place.name, place.type, place.fk_place, placeID]).catch((error) => {
       return new Error(error);
     });
   },

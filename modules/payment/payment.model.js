@@ -15,18 +15,18 @@ module.exports = {
 
 /* ------------------------- POST -------------------------- */
 
-createPayment: (con, payment) => {
-  	return con.query('INSERT INTO PAYMENT(pay_amount, pay_res_cod, pay_description, fk_user_id, fk_bank_account,) VALUES($1,$2,$3,$4,$5)',
-  	[payment.amount, payment.res_code, payment.description, payment.userID, payment.bankAccountID,]).catch((error) => {
+  createPayment: (con, payment) => {
+  	return con.query('INSERT INTO PAYMENT(pay_amount, pay_res_cod, pay_description, fk_user_id, fk_bank_account_id) VALUES($1,$2,$3,$4,$5)',
+  	[payment.amount, payment.res_code, payment.description, payment.userID, payment.bankAccountID]).catch((error) => {
       return new Error(error);
     });
   },
 
 /* -------------------------- PUT ---------------------------- */
 
-updatePayment: (con, paymentID, payment) => {
-  	return con.query('UPDATE PAYMENT SET pay_amount = $1, pay_res_cod = $2, pay_description = $3, fk_user_id = $4, fk_bank_account_id = $5, WHERE pay_id = $6',
-  	[payment.pay_amount, payment.pay_res_cod, payment.pay_description, payment.u_pay_id, payment.ba_pay_id, paymentID]).catch((error) => {
+  updatePayment: (con, paymentID, payment) => {
+  	return con.query('UPDATE PAYMENT SET pay_amount = $1, pay_res_cod = $2, pay_description = $3, fk_user_id = $4, fk_bank_account_id = $5 WHERE pay_id = $6',
+  	[payment.amount, payment.res_code, payment.description, payment.userID, payment.bankAccountID, paymentID]).catch((error) => {
       return new Error(error);
     });
   },
