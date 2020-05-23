@@ -7,7 +7,7 @@ async function createBankAccountToken(bankAccount){
           bank_account: {
             country: 'US',
             currency: 'usd',
-            account_holder_name: bankAccount.accountHolderName,
+            account_holder_name: bankAccount.holderName,
             account_holder_type: 'individual',
             routing_number: '110000000',
             account_number: '000123456789',
@@ -77,36 +77,56 @@ module.exports = {
 /* ------------------------- POST -------------------------- */
   createBankAccount: async (con, bankAccount) => {
 
-    try {      
-      var bankAccountToken = await createBankAccountToken(bankAccount);        
-      var token = bankAccountToken.id;
-      const stripeBankAccount = await stripe.customers.createSource(
-          //'cus_HDyHhHBY9h5ETD',
-          bankAccount.customer,
-          {source: token}, 
-      );
+    const bankAccountExists = await con.query("SELECT * FROM BANK_ACCOUNT WHERE BA_ROUTING_NUMBER = '"+bankAccount.routingNumber+"' AND BA_ACCOUNT_NUMBER = '"+bankAccount.accountNumber+"'").catch((error) => {
+      return new Error(error);
+    });
 
-      var bankAccountToken = await createBankAccountToken(bankAccount);        
-      var token = bankAccountToken.id;
-      const stripeConnectBankAccount = await stripe.accounts.createExternalAccount(
-        //'acct_1GftyGApQ49xnzhM',
-        bankAccount.customerConnectAccount,
-        {
-          external_account: token,
-        }            
-    );
+    if(bankAccountExists.length > 0){
+      return 'Bank account already exists.';
+    }
+    else {
+      try {      
+        var bankAccountToken = await createBankAccountToken(bankAccount);        
+        var token = bankAccountToken.id;
+        const stripeBankAccount = await stripe.customers.createSource(
+            bankAccount.customer,
+            {source: token}, 
+        );
+  
+        var bankAccountToken = await createBankAccountToken(bankAccount);        
+        var token = bankAccountToken.id;
+        const stripeConnectBankAccount = await stripe.accounts.createExternalAccount(
+          bankAccount.customerConnectAccount,
+          {
+            external_account: token,
+          }            
+        );
+  
+        const bankAccountCreatedID = await con.query('INSERT INTO BANK_ACCOUNT(ba_account_type, ba_routing_number, ba_account_number, ba_check_number, ba_is_primary, fk_user_id, ba_stripe_id, ba_stripe_connect_id, ba_holder_name, fk_bank_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, (select ba_id from bank where ba_name = \''+bankAccount.bank+'\')) RETURNING ba_id',
+        ['checking', bankAccount.routingNumber, bankAccount.accountNumber, bankAccount.checkNumber, bankAccount.isPrimary, bankAccount.userID, stripeBankAccount.id, stripeConnectBankAccount.id, bankAccount.holderName]).catch((error) => {
+          console.log(error);
+          return new Error(error);
+        });
 
-      return con.query('INSERT INTO BANK_ACCOUNT(ba_account_type, ba_routing_number, ba_account_number, ba_check_number, ba_is_primary, fk_user_id, ba_stripe_id, ba_stripe_connect_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
-  	  [bankAccount.account_type, bankAccount.routing_number, bankAccount.account_number, bankAccount.check_number, bankAccount.is_primary, bankAccount.userID, stripeBankAccount.id, stripeConnectBankAccount.id]).catch((error) => {
+        let deposit1 = Math.round((Math.random() * (1.26 - 0.75) + 0.75) * 100.0) / 100.0;
+        let deposit2 = Math.round((2.50 - deposit1) * 100.0) / 100.0;
+
+        console.log("Deposits are: ", deposit1, ' - ', deposit2);
+        console.log("Deposits sum = ", deposit1 + deposit2);
+
+        const validation = await con.query('INSERT INTO VALIDATION(v_payment_1, v_payment_2, v_date, fk_user_id, fk_bank_account_id) values('+deposit1+', '+deposit2+', now(), '+bankAccount.userID+', '+bankAccountCreatedID[0].ba_id+')').catch((error) => {
+          console.log(error);
+          return new Error(error);
+        });
+
+        return 'Bank account created.';
+  
+      } catch (error) {
         console.log(error);
         return new Error(error);
-      });
-
-    } catch (error) {
-      console.log(error);
-      return new Error(error);
+      }
     }
-  	
+      	
   },
 
 /* -------------------------- PUT ---------------------------- */
