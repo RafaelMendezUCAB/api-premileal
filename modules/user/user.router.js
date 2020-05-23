@@ -11,7 +11,7 @@ router.get('/login/social/:email/:type', /*auth.validateToken,*/ userController.
 
 /* ------------------------- POST -------------------------- */
 router.post("/create", /*auth.validateToken ,*/ userController.createUser);
-router.post("/signup", /*auth.validateToken,*/ userController.registerUser); // works for both: federated and not federated.
+router.post("/signup", /*auth.validateToken,*/ userController.createUser); // works for both: federated and not federated.
 
 /* -------------------------- PUT ---------------------------- */
 router.put("/update/:id", /*auth.validateToken ,*/ userController.updateUser);

@@ -41,10 +41,40 @@ module.exports = {
     });
   },
 
+  getBankAccountStatus: async (con, bankAccountID) => {
+    var bankAccountData = {
+      bankAccount: {},
+      movements: []
+    };
+
+    const account = await con.query('select ba_account_type as type, ba_routing_number as routing_number, ba_account_number as account_number, ba_check_number as check_number, ba_is_primary as is_primary, sta_name as status from status, hst_sta, bank_account where fk_bank_account_id = '+bankAccountID+'  and fk_status_id = sta_id and fk_bank_account_id = ba_id order by sta_id desc limit 1').catch((error) => {
+      return new Error(error);
+    });
+
+    bankAccountData.bankAccount = account[0];
+
+    const payments = await con.query('select DISTINCT ON(status.fk_payment_id) status.hs_date as date, status.fk_payment_id as payment, status.fk_status_id as status from (select * from hst_sta, payment p where fk_payment_id is not null and p.pay_id = fk_payment_id and p.fk_bank_account_id = '+bankAccountID+' order by hs_id desc) as status').catch((error) => {
+      return new Error(error);
+    });
+
+    payments.forEach(payment => {
+      bankAccountData.movements.push(payment);
+    });
+
+    const withdraws = await con.query('select DISTINCT ON(status.fk_withdraw_id) status.hs_date as date, status.fk_withdraw_id as withdraw, status.fk_status_id as status from (select * from hst_sta, withdraw w where fk_withdraw_id is not null and w.w_id = fk_withdraw_id and w.fk_bank_account_id = '+bankAccountID+' order by hs_id desc) as status').catch((error) => {
+      return new Error(error);
+    });
+
+    withdraws.forEach(withdraw => {
+      bankAccountData.movements.push(withdraw);
+    });
+
+    console.log("data is: ", bankAccountData);
+
+    return bankAccountData;
+  },
+
 /* ------------------------- POST -------------------------- */
-
-  
-
   createBankAccount: async (con, bankAccount) => {
 
     try {      
@@ -110,9 +140,33 @@ module.exports = {
   },
 /* ------------------------- DELETE -------------------------- */
 
-  deleteBankAccount: (con, bankAccountID) => {
-  	return con.query('DELETE FROM BANK_ACCOUNT WHERE ba_id = $1', [bankAccountID]).catch((error) => {
-      return new Error(error);
-    });
+  deleteBankAccount: async (con, bankAccountID, bankAccount) => {
+
+    try {
+      
+      const deletedBankAccount = await stripe.customers.deleteSource(
+        //'cus_HIXY7Ud6FbcSCk',
+        //'ba_1GfukjBDr8hNIY5zpcHhp38y', 
+        bankAccount.customer,
+        bankAccount.stripeID           
+        );
+    
+      const deletedConnectBankAccount = await stripe.accounts.deleteExternalAccount(
+          //'acct_1GcuLfBDr8hNIY5z',
+          //'ba_1GfukjBDr8hNIY5zpcHhp38y',  
+          bankAccount.stripeConnectUserAccountID,
+          bankAccount.stripeConnectBankAccountID              
+        );
+
+      return con.query('DELETE FROM BANK_ACCOUNT WHERE ba_id = $1', [bankAccountID]).catch((error) => {
+        console.log(error);
+        return new Error(error);
+      });
+
+    } catch (error) {
+      console.dir(error);
+      return "Bank Account couldn't be deleted.";
+    }
+  	
   },
 };

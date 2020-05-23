@@ -21,8 +21,13 @@ module.exports = {
       logger.error(`Error in module "user" (GET /${req.params.id})`);
       next(createError(500, "Error. Couldn't obtain user from database."));
     } else {
-      logger.info("Registered user list.");
-      res.json(results);
+      if(results.length === 0){
+        res.send("Users doesn't exists.");
+      }
+      else {
+        logger.info("User data retrieved successfully.");
+        res.json(results);
+      }      
     }
   },
 
@@ -32,8 +37,13 @@ module.exports = {
       logger.error('Error in module "user" (GET /login)');
       next(createError(500, "Error. Couldn't retreive user data."));
     } else {
-      logger.info("User data retrieved successfully.");
-      res.json(results);
+      if(results.length === 0){
+        res.send("Users doesn't exists.");
+      }
+      else {
+        logger.info("User data retrieved successfully.");
+        res.json(results);
+      }  
     }
   },
 
@@ -43,8 +53,13 @@ module.exports = {
       logger.error('Error in module "user" (GET /socialLogin)');
       next(createError(500, "Error. Couldn't retreive user data."));
     } else {
-      logger.info("User data retrieved successfully.");
-      res.json(results);
+      if(results.length === 0){
+        res.send("Users doesn't exists.");
+      }
+      else {
+        logger.info("User data retrieved successfully.");
+        res.json(results);
+      }      
     }
   },
 
@@ -56,21 +71,15 @@ module.exports = {
       logger.error('Error in module "user" (POST /create)');
       next(createError(500, "Error. Could't create user from database."));
     } else {
-      logger.info("User created.");
-      res.json(results);
+      if(results === 'User email already exists.'){
+        res.send(results);
+      }
+      else {
+        logger.info("User created.");
+        res.json(results);
+      }      
     }
-  },
-
-  registerUser: async (req, res, next) => {
-    let results = await userModel.registerUser(req.con, req.body);
-    if (results instanceof Error) {
-      logger.error('Error in module "user" (POST /singup)');
-      next(createError(500, "Error. Couldn't register user in Database."));
-    } else {
-      logger.info("User registered.");
-      res.send('User registered successfully');
-    }
-  },
+  },  
 
 /* -------------------------- PUT ---------------------------- */
   updateUser: async (req, res, next) => {
