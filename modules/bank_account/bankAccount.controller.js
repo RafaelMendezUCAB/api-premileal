@@ -56,8 +56,17 @@ createBankAccount: async (req, res, next) => {
       logger.error('Error in module "BankAccount" (POST /create)');
       next(createError(500, "Error. Could't create bank account from database."));
     } else {
-      logger.info("Bank account created.");
-      res.json(results);
+      if(results === 'Bank account already exists.'){
+        res.send('Bank account already exists.');
+      }
+      else if(results === 'Bank account created.'){
+        logger.info("Bank account created.");
+        res.send(results);
+      }
+      else {
+        logger.info("Bank account could not be created.");
+        res.send("An error ocurred.");
+      }      
     }
   },
 
