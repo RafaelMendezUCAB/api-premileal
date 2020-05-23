@@ -119,23 +119,41 @@ module.exports = {
   },
 
   verifyBankAccount: async (con, bankAccountID, bankAccount) => {
-    
-    try {      
 
-      const verificationInformation = await stripe.customers.verifySource(
-          //'cus_HDyHhHBY9h5ETD',
-          bankAccount.customer,
-          //'ba_1GfYfOBDr8hNIY5zZ61sB1Tq',
-          bankAccountID,
-          {amounts: [32, 45]}            
-      );
+    const validationValues = await con.query('SELECT * FROM VALIDATION WHERE fk_bank_account_id = '+bankAccountID).catch((error) => {
+      return new Error(error);
+    });
 
-      return 'Sucessfull validation';
+    let validationAmount1 = validationValues[0].v_payment_1;
+    let validationAmount2 = validationValues[0].v_payment_2;
 
-  } catch (error) {
-      console.dir(error);
-      return "Bank Account couldn't be verified.";
-  }
+    if((validationAmount1 === bankAccount.amount1 && validationAmount2 === bankAccount.amount2) || (validationAmount2 === bankAccount.amount1 && validationAmount1 === bankAccount.amount2)){
+      try {    
+
+        const verificationInformation = await stripe.customers.verifySource(
+            //'cus_HDyHhHBY9h5ETD',
+            bankAccount.customer,
+            //'ba_1GfYfOBDr8hNIY5zZ61sB1Tq',
+            bankAccountID,
+            {amounts: [32, 45]}            
+        );
+
+        const historicStatusModel = require("../hst_sta/historicStatus.model");
+
+        const localVerification = await historicStatusModel.createBankAccountStatus(con, bankAccountID, {statusID: 2});
+
+        //Enviar correo electrónico antes del return.
+
+        return 'Sucessfull validation.';
+  
+      } catch (error) {
+          console.dir(error);
+          return "Bank Account couldn't be verified.";
+      }
+    } 
+    else {
+      return 'Invalid amounts.';
+    }       
     
   },
 /* ------------------------- DELETE -------------------------- */

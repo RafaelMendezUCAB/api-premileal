@@ -81,8 +81,16 @@ createBankAccount: async (req, res, next) => {
       logger.error(`Error in module "BankAccount" (PUT /verify/${req.params.id})`);
       next(createError(500, "Error. Could't verify bank account."));
     } else {
-      logger.info("Verified bank account.");
-      res.json(results);
+      if(results === 'Sucessfull validation.'){
+        res.send('Sucessfull validation.');
+      }
+      else if (results === 'Invalid amounts.'){
+        res.send('Invalid amounts.');
+      }
+      else {
+        logger.info("Couldn't verify bank account.");
+        res.send("An error has ocurred.");
+      }      
     }
   },
 
