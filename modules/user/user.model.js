@@ -27,7 +27,7 @@ module.exports = {
       return new Error(error);
     });
 
-    if(loginData.length === 0){
+    if(loginData instanceof Array && loginData.length === 0){
       return "Social user doesn't exists.";
     }
     else {
