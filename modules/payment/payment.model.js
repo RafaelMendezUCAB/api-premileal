@@ -1,5 +1,6 @@
 const nodeCron = require('../../utils/nodecron/nodeCron');
 const invoice = require('../invoice/invoice.model');
+const sendgrid = require('../../utils/emails/sendgrid');
 
 module.exports = {
 /* --------------------------- GET ------------------------- */
@@ -43,27 +44,25 @@ module.exports = {
     try {
       const payment = await stripe.charges.create(
           {
-            amount: paymentData.amount * 100,
+            amount: paymentData.total * 100,
             currency: 'usd',
             //source: 'ba_1GfX59BDr8hNIY5z8B4md4yk',
-            source: paymentData.bankAccountID,
+            source: paymentData.bankAccount.stripeID,
             description: 'Points purchase. Total points: '+ paymentData.points,
             //customer: 'cus_HDyHhHBY9h5ETD',
             customer: paymentData.customer
           }                        
       );
 
-      payment.transactionID = payment.id;
-      payment.status = 'Proccessing';
-
-      nodeCron.addPayment(payment);
+      paymentData.transactionID = payment.id;
+      paymentData.status = 'Proccessing';      
 
       const paymentRegistration = await module.exports.createPayment(con, {
-        amount: paymentData.amount,
+        amount: paymentData.total,
         res_code: paymentData.transactionID,
         description: 'Points purchase. Total points: '+ paymentData.points,
         userID: paymentData.userID,
-        bankAccountID: paymentData.bankAccountID
+        bankAccountID: paymentData.bankAccount.bankAccountID
       });
       
       if(paymentRegistration.message === 'Payment successfully created.'){
@@ -72,13 +71,26 @@ module.exports = {
         const invoiceRegistration = await invoice.createInvoice(con, {
           units: paymentData.points,
           amount: paymentData.amount,
-          service_commission: 'SELECT set_service_commission FROM SETTINGS',
-          gateway_commission: 'SELECT set_gateway_commission FROM SETTINGS',
+          service_commission: paymentData.serviceCommision,
+          gateway_commission: paymentData.stripeCommision,
           paymentID: paymentData.paymentID
         });
 
         if(invoiceRegistration === 'Invoice successfully created.'){
+
+          nodeCron.addPayment(paymentData);
+
           // Enviar correo de compra de puntos al usuario
+          const email = await sendgrid.sendEmail({
+            to: paymentData.userEmail,
+            templateID: 'd-c8f6ba309a9741c986d145c80143ddbc',  // Payment ID.
+            atributes : {
+              numberPoints: paymentData.points,
+              dollarAmount: paymentData.total,
+              serviceCommission: paymentData.serviceCommision,
+              statusPoints: 'Proccessing payment.'
+            }
+          });
 
           return 'Points payment successfully proccessed.';
         }        

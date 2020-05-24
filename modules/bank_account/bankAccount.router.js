@@ -6,7 +6,7 @@ const auth = require("../../middlewares/auth");
 /* --------------------------- GET ------------------------- */
 router.get("/all", /*auth.validateToken ,*/ bankAccountController.getAllBankAccounts);
 router.get("/:id", /*auth.validateToken ,*/ bankAccountController.getBankAccount);
-router.get("/userBank/all/:idUser", /*auth.validateToken ,*/ bankAccountController.getAllUserBankAccounts);
+router.get("/all/:idUser", /*auth.validateToken ,*/ bankAccountController.getAllUserBankAccounts);
 router.get("/status/:bankAccountID", /*auth.validateToken ,*/ bankAccountController.getBankAccountStatus);
 
 /* ------------------------- POST -------------------------- */

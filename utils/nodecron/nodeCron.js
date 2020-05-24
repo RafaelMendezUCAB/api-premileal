@@ -43,13 +43,13 @@ async function checkPaymentStatus(payment){
                 });
 
                 deletePayment(payment);
-
+                console.log("PAYMENT CHECKED");
                 return 'Transaction approved.';
             }
             
         };
 
-        return "Error. Couldn't verify transaction.";
+        return "Transaction not yet succeded.";
 
     } catch (error) {
         return "Error. Couldn't verify transaction.";
@@ -66,22 +66,15 @@ function addPayment(paymentData){
 }
 
 function deletePayment(payment){
-    payments = payments.splice(payments.indexOf(payment), 1);
+    payments.splice(payments.indexOf(payment), 1);
 }
 
 async function checkPayments(){
     console.log("checking payments...");
     var i = 0;
-    if(payments.length > 0){
-        while(i < payments.length){
-            await checkPaymentStatus(payment);
-            i++
-            console.log("i++");
-        }
-    }
-
-    
-
+    for(var i = 0; i < payments.length; i++){
+        await checkPaymentStatus(payments[i]);
+    }    
     
 }
 
