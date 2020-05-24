@@ -53,8 +53,8 @@ module.exports = {
       logger.error('Error in module "user" (GET /socialLogin)');
       next(createError(500, "Error. Couldn't retreive user data."));
     } else {
-      if(results.length === 0){
-        res.send("Users doesn't exists.");
+      if(results === "Social user doesn't exists."){
+        res.send("Social user doesn't exists.");
       }
       else {
         logger.info("User data retrieved successfully.");
