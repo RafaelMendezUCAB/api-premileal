@@ -1,9 +1,10 @@
 const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
+const sendgrid = require('../../utils/emails/sendgrid');
 
 module.exports = {
   
 /* --------------------------- GET ------------------------- */
-  getAllUsers: (con) => {
+  getAllUsers: (con) => {    
     return con.query('SELECT * FROM USER_F').catch((error) => {
       return new Error(error);
     });
@@ -86,6 +87,14 @@ module.exports = {
         const user_id = await con.query('INSERT INTO USER_F(u_name, u_lastName, u_password, u_image, u_email, u_birthdate, u_points, u_type, u_blocked, fk_role_id, fk_place_id, fk_level_id, u_stripe_id, u_stripe_connect_id) VALUES($1, $2, $3, $4, $5, $6, 0, $7, true, 1, $8, 1, $9, $10) RETURNING u_id',
         [user.name, user.lastName, user.password, user.image, user.email, user.birthdate !== "" ? user.birthdate : null, user.type, user.placeID !== "" ? user.placeID : null, customer.id, account.id]).catch((error) => {
           return new Error(error);
+        });
+
+        const email = await sendgrid.sendEmail({
+          to: user.email,
+          templateID: 'd-0f1639f66a1f465d990b22e494ed3239',  // Welcome template ID
+          atributes : {
+            name: user.name + ' ' + user.lastName
+          }
         });
 
         if(user.type === 'No Federado'){

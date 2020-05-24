@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/RafaelMendezUCAB/api-premileal#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.1.1",
     "body-parser": "^1.19.0",
     "chalk": "^4.0.0",
     "compression": "^1.7.4",
