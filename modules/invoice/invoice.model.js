@@ -15,11 +15,14 @@ module.exports = {
 
 /* ------------------------- POST -------------------------- */
 
-  createInvoice: (con, invoice) => {
-  	return con.query('INSERT INTO INVOICE(i_units, i_amount, i_service_commission, i_gateway_commission, fk_payment_id) VALUES($1,$2,$3,$4,$5)',
+  createInvoice: async (con, invoice) => {
+    const invoiceCreated = await con.query('INSERT INTO INVOICE(i_units, i_amount, i_service_commission, i_gateway_commission, fk_payment_id) VALUES($1,$2,$3,$4,$5)',
   	[invoice.units, invoice.amount, invoice.service_commission, invoice.gateway_commission, invoice.paymentID]).catch((error) => {
       return new Error(error);
     });
+    
+    return 'Invoice successfully created.';
+
   },
 
 /* -------------------------- PUT ---------------------------- */

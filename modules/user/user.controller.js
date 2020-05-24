@@ -105,6 +105,18 @@ module.exports = {
       res.json(results);
     }
   },
+  
+  addPoints: async (req, res, next) => {
+    const userPoints = req.body;
+    let results = await userModel.addPoints(req.con, req.params.id, userPoints);
+    if (results instanceof Error) {
+      logger.error(`Error in module "user" (PUT /addPoints/${req.params.id})`);
+      next(createError(500, "Error. Could't add points to user in database."));
+    } else {
+      logger.info("Updated user points.");
+      res.json(results);
+    }
+  },
 
 /* ------------------------- DELETE -------------------------- */
   deleteUser: async (req, res, next) => {

@@ -27,7 +27,7 @@ module.exports = {
   },
 
 /* ------------------------- POST --------------------------- */
-createPayment: async (req, res, next) => {
+  createPayment: async (req, res, next) => {
     const payment = req.body;
     let results = await paymentModel.createPayment(req.con, payment);
     if (results instanceof Error) {
@@ -36,6 +36,23 @@ createPayment: async (req, res, next) => {
     } else {
       logger.info("Payment created.");
       res.json(results);
+    }
+  },
+
+  pointsPurchase: async (req, res, next) => {
+    const payment = req.body;
+    let results = await paymentModel.pointsPurchase(req.con, payment);
+    if (results instanceof Error) {
+      logger.error('Error in module "payment" (POST /points/purchase)');
+      next(createError(500, "Error. Could't create payment of points from database."));
+    }
+    else if(results === 'Points payment successfully proccessed.'){
+      logger.info("Points payment successfully proccessed.");
+      res.send('Points payment successfully proccessed.');
+    }    
+    else {
+      logger.info("Points payment couldn't be proccessed.");
+      res.send("Points payment couldn't be proccessed.");
     }
   },
 

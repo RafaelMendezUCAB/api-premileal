@@ -36,6 +36,15 @@ module.exports = {
     });
   },
 
+  createPaymentStatus: async (con, historicStatus) => {
+    const payment = await con.query('INSERT INTO HST_STA(hs_date, fk_payment_id, fk_status_id) VALUES(now(), '+historicStatus.paymentID+', '+historicStatus.statusID+')').catch((error) => {
+      return new Error(error);
+    });
+
+    return 'Status created successfully.';
+    
+  },
+
 /* -------------------------- PUT ---------------------------- */
 
   updateHistoricStatus: (con, historicStatusID, historicStatus) => {

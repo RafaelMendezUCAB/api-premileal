@@ -120,11 +120,21 @@ module.exports = {
     });
   },
 
-  updatePoints: (con, userID, userPoints) => {
-    return con.query('UPDATE USER_F SET u_points = $1 WHERE u_id = $2',
+  updatePoints: async (con, userID, userPoints) => {
+    const updatePoints = await con.query('UPDATE USER_F SET u_points = $1 WHERE u_id = $2',
     [userPoints.points, userID]).catch((error) => {
       return new Error(error);
     });
+    
+    return 'Points successfully updated.';
+  },
+
+  addPoints: async (con, userID, userPoints) => {
+    const updatedPoints = await con.query("UPDATE USER_F SET u_points = u_points + "+userPoints.points+" WHERE u_id = "+userID).catch((error) => {
+      return new Error(error);
+    });
+
+    return 'Points successfully updated.';
   },
 
 /* ------------------------- DELETE -------------------------- */
