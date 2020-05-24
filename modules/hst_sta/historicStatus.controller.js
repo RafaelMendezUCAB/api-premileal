@@ -85,6 +85,18 @@ module.exports = {
     } 
   },
 
+  createPaymentStatus: async (req, res, next) => {
+    const historicStatus = req.body;
+    let results = await historicStatusModel.createPaymentStatus(req.con, req.params.id, historicStatus);
+    if (results instanceof Error) {
+      logger.error(`Error in module "HistoricStatus" (POST /payment`);
+      next(createError(500, "Error. Could't create payment status."));
+    } else {
+      logger.info("Updated HistoricStatus.");
+      res.json(results);
+    }
+  },
+
 /* -------------------------- PUT ---------------------------- */
   updateHistoricStatus: async (req, res, next) => {
     const historicStatus = req.body;

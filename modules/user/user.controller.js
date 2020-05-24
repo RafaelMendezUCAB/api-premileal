@@ -53,8 +53,8 @@ module.exports = {
       logger.error('Error in module "user" (GET /socialLogin)');
       next(createError(500, "Error. Couldn't retreive user data."));
     } else {
-      if(results.length === 0){
-        res.send("Users doesn't exists.");
+      if(results === "Social user doesn't exists."){
+        res.send("Social user doesn't exists.");
       }
       else {
         logger.info("User data retrieved successfully.");
@@ -100,6 +100,18 @@ module.exports = {
     if (results instanceof Error) {
       logger.error(`Error in module "user" (PUT /points/${req.params.id})`);
       next(createError(500, "Error. Could't update user points from database."));
+    } else {
+      logger.info("Updated user points.");
+      res.json(results);
+    }
+  },
+  
+  addPoints: async (req, res, next) => {
+    const userPoints = req.body;
+    let results = await userModel.addPoints(req.con, req.params.id, userPoints);
+    if (results instanceof Error) {
+      logger.error(`Error in module "user" (PUT /addPoints/${req.params.id})`);
+      next(createError(500, "Error. Could't add points to user in database."));
     } else {
       logger.info("Updated user points.");
       res.json(results);
