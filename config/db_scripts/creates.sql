@@ -127,7 +127,7 @@ CREATE TABLE VALIDATION (
 CREATE TABLE PAYMENT (
 	pay_id SERIAL PRIMARY KEY,
 	pay_amount REAL NOT NULL,
-	pay_res_cod INTEGER NOT NULL,
+	pay_res_cod VARCHAR(100) NOT NULL,
 	pay_description VARCHAR(100),
 	fk_user_id INTEGER NOT NULL,
 	fk_bank_account_id INTEGER NOT NULL,

@@ -1,5 +1,7 @@
 const nodeCron = require('../../utils/nodecron/nodeCron');
 const invoice = require('../invoice/invoice.model');
+const sendgrid = require('../../utils/emails/sendgrid');
+const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
 
 module.exports = {
 /* --------------------------- GET ------------------------- */
@@ -23,9 +25,11 @@ module.exports = {
   	[payment.amount, payment.res_code, payment.description, payment.userID, payment.bankAccountID]).catch((error) => {
       return new Error(error);
     });
+
+    console.log("retorna: ", paymentCreated);
     
     return {
-      paymentID: payment[0].pay_id,
+      paymentID: paymentCreated[0].pay_id,
       message: 'Payment successfully created.'
     }
 
@@ -33,6 +37,17 @@ module.exports = {
 
   pointsPurchase: async (con, payment) => {
 
+    const bankAccountNotVerificated = await con.query("SELECT * FROM HST_STA WHERE fk_bank_account_id = "+payment.bankAccount.bankAccountID+" order by hs_id desc limit 1").catch((error) => {
+      console.log(error);
+      return new Error(error);
+    });
+
+    console.log(bankAccountNotVerificated);
+
+    if(bankAccountNotVerificated.length > 0 && bankAccountNotVerificated[0].fk_status_id === 1){
+      return 'Bank account is not verified.';
+    }
+    
     let paymentData = payment;
 
     /*--------------------------------------------------------------------------------
@@ -43,27 +58,25 @@ module.exports = {
     try {
       const payment = await stripe.charges.create(
           {
-            amount: paymentData.amount * 100,
+            amount: paymentData.total * 100,
             currency: 'usd',
             //source: 'ba_1GfX59BDr8hNIY5z8B4md4yk',
-            source: paymentData.bankAccountID,
+            source: paymentData.bankAccount.stripeID,
             description: 'Points purchase. Total points: '+ paymentData.points,
             //customer: 'cus_HDyHhHBY9h5ETD',
             customer: paymentData.customer
           }                        
       );
 
-      payment.transactionID = payment.id;
-      payment.status = 'Proccessing';
-
-      nodeCron.addPayment(payment);
+      paymentData.transactionID = payment.id;
+      paymentData.status = 'Proccessing';      
 
       const paymentRegistration = await module.exports.createPayment(con, {
-        amount: paymentData.amount,
+        amount: paymentData.total,
         res_code: paymentData.transactionID,
         description: 'Points purchase. Total points: '+ paymentData.points,
         userID: paymentData.userID,
-        bankAccountID: paymentData.bankAccountID
+        bankAccountID: paymentData.bankAccount.bankAccountID
       });
       
       if(paymentRegistration.message === 'Payment successfully created.'){
@@ -72,13 +85,26 @@ module.exports = {
         const invoiceRegistration = await invoice.createInvoice(con, {
           units: paymentData.points,
           amount: paymentData.amount,
-          service_commission: 'SELECT set_service_commission FROM SETTINGS',
-          gateway_commission: 'SELECT set_gateway_commission FROM SETTINGS',
+          service_commission: paymentData.serviceCommision,
+          gateway_commission: paymentData.stripeCommision,
           paymentID: paymentData.paymentID
         });
 
         if(invoiceRegistration === 'Invoice successfully created.'){
+
+          nodeCron.addPayment(paymentData);
+
           // Enviar correo de compra de puntos al usuario
+          const email = await sendgrid.sendEmail({
+            to: paymentData.userEmail,
+            templateID: 'd-c8f6ba309a9741c986d145c80143ddbc',  // Payment ID.
+            atributes : {
+              numberPoints: paymentData.points,
+              dollarAmount: paymentData.total,
+              serviceCommission: paymentData.serviceCommision,
+              statusPoints: 'Proccessing payment.'
+            }
+          });
 
           return 'Points payment successfully proccessed.';
         }        

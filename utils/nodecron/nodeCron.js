@@ -24,9 +24,8 @@ async function checkPaymentStatus(payment){
         if(charge.status === 'succeeded'){
             const newStatus = await historicStatus.createPaymentStatus(con, {
                 paymentID: payment.paymentID,
-                statusID: "SELECT sta_id FROM STATUS WHERE sta_name = 'approved'"
+                statusID: 8
             });
-
             
             const userPointsUpdate = await user.addPoints(con, payment.userID, {
                 points: payment.points
@@ -43,13 +42,13 @@ async function checkPaymentStatus(payment){
                 });
 
                 deletePayment(payment);
-
+                console.log("PAYMENT CHECKED");
                 return 'Transaction approved.';
             }
             
         };
 
-        return "Error. Couldn't verify transaction.";
+        return "Transaction not yet succeded.";
 
     } catch (error) {
         return "Error. Couldn't verify transaction.";
@@ -66,22 +65,15 @@ function addPayment(paymentData){
 }
 
 function deletePayment(payment){
-    payments = payments.splice(payments.indexOf(payment), 1);
+    payments.splice(payments.indexOf(payment), 1);
 }
 
 async function checkPayments(){
     console.log("checking payments...");
     var i = 0;
-    if(payments.length > 0){
-        while(i < payments.length){
-            await checkPaymentStatus(payment);
-            i++
-            console.log("i++");
-        }
-    }
-
-    
-
+    for(var i = 0; i < payments.length; i++){
+        await checkPaymentStatus(payments[i]);
+    }    
     
 }
 
@@ -109,3 +101,4 @@ function initializeServices(){
 }
 
 exports.initializeServices = initializeServices
+exports.addPayment = addPayment

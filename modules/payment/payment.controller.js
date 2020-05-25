@@ -49,7 +49,11 @@ module.exports = {
     else if(results === 'Points payment successfully proccessed.'){
       logger.info("Points payment successfully proccessed.");
       res.send('Points payment successfully proccessed.');
-    }    
+    }  
+    else if(results === 'Bank account is not verified.'){
+      logger.info("Bank account is not verified."); 
+      res.send('Bank account is not verified.');
+    }
     else {
       logger.info("Points payment couldn't be proccessed.");
       res.send("Points payment couldn't be proccessed.");

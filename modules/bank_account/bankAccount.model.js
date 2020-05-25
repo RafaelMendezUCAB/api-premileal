@@ -35,10 +35,18 @@ module.exports = {
     });
   },
 
-  getAllUserBankAccounts: (con, UserID) => {
-    return con.query('SELECT ba_account_type as account_type, ba_routing_number as routing_number, ba_account_number as account_number, ba_check_number as check_number, ba_is_primary as is_primary FROM BANK_ACCOUNT WHERE fk_user_id = $1', [UserID]).catch((error) => {
+  getAllUserBankAccounts: async (con, UserID) => {
+    const userBankAccounts = await con.query("SELECT bacc.ba_id as \"bankAccountID\", bacc.ba_account_type as \"accountType\", bacc.ba_routing_number as \"routingNumber\", bacc.ba_account_number as \"accountNumber\", bacc.ba_check_number as \"checkNumber\", bacc.ba_is_primary as \"isPrimary\", bacc.ba_holder_name as \"holderName\", ba_stripe_id as \"stripeID\", ba_stripe_connect_id as \"stripeConnectID\", b.ba_name as bank FROM BANK_ACCOUNT bacc, BANK b WHERE fk_user_id = $1 AND bacc.fk_bank_id = b.ba_id", [UserID]).catch((error) => {
+      console.log(error) ;
       return new Error(error);
     });
+    
+    if(userBankAccounts instanceof Array && userBankAccounts.length === 0){
+      return 'No bank accounts registered.';
+    }
+    
+    return userBankAccounts;
+
   },
 
   getBankAccountStatus: async (con, bankAccountID) => {
