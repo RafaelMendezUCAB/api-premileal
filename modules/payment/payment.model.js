@@ -1,6 +1,7 @@
 const nodeCron = require('../../utils/nodecron/nodeCron');
 const invoice = require('../invoice/invoice.model');
 const sendgrid = require('../../utils/emails/sendgrid');
+const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
 
 module.exports = {
 /* --------------------------- GET ------------------------- */
@@ -24,9 +25,11 @@ module.exports = {
   	[payment.amount, payment.res_code, payment.description, payment.userID, payment.bankAccountID]).catch((error) => {
       return new Error(error);
     });
+
+    console.log("retorna: ", paymentCreated);
     
     return {
-      paymentID: payment[0].pay_id,
+      paymentID: paymentCreated[0].pay_id,
       message: 'Payment successfully created.'
     }
 
@@ -34,6 +37,17 @@ module.exports = {
 
   pointsPurchase: async (con, payment) => {
 
+    const bankAccountNotVerificated = await con.query("SELECT * FROM HST_STA WHERE fk_bank_account_id = "+payment.bankAccount.bankAccountID+" order by hs_id desc limit 1").catch((error) => {
+      console.log(error);
+      return new Error(error);
+    });
+
+    console.log(bankAccountNotVerificated);
+
+    if(bankAccountNotVerificated[0].fk_status_id === 1){
+      return 'Bank account is not verified.';
+    }
+    
     let paymentData = payment;
 
     /*--------------------------------------------------------------------------------

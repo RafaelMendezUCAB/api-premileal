@@ -11,7 +11,8 @@ INSERT INTO STATUS(sta_name, sta_description) VALUES('online','User is online.')
 INSERT INTO STATUS(sta_name, sta_description) VALUES('offline','User is offline.');
 INSERT INTO STATUS(sta_name, sta_description) VALUES('in process', 'Payment is being processed');
 INSERT INTO STATUS(sta_name, sta_description) VALUES('approved', 'Payment has been approved');
-INSERT INTO STATUS(sta_name, sta_description) VALUES('failed', 'Payment couldn\'t be proccesed');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('failed', 'Payment could not be proccesed');
+INSERT INTO STATUS(sta_name, sta_description) VALUES('new user', 'New user created');
 
 /* LEVELS INSERTS */
 INSERT INTO LEVEL(l_name, l_percentage, l_bonus, l_cost) VALUES('Basic', 0, 0, 0);

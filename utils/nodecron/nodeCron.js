@@ -102,3 +102,4 @@ function initializeServices(){
 }
 
 exports.initializeServices = initializeServices
+exports.addPayment = addPayment

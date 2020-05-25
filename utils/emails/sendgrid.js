@@ -1,6 +1,6 @@
 /* --------------------     SENDGRID IMPORTS ------------------------ */
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey('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');
+sgMail.setApiKey('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');
 
 module.exports = {
 
@@ -16,7 +16,7 @@ module.exports = {
             const email = await sgMail.send(msg);    
             return 'Emails successfully sent.';
         } catch (error) {
-            console.dir(err);
+            console.dir(error);
             return "ERROR. Couldn't send email.";
         }
     }
