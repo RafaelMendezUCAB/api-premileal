@@ -24,9 +24,8 @@ async function checkPaymentStatus(payment){
         if(charge.status === 'succeeded'){
             const newStatus = await historicStatus.createPaymentStatus(con, {
                 paymentID: payment.paymentID,
-                statusID: "SELECT sta_id FROM STATUS WHERE sta_name = 'approved'"
+                statusID: 8
             });
-
             
             const userPointsUpdate = await user.addPoints(con, payment.userID, {
                 points: payment.points

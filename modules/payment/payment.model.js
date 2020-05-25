@@ -44,7 +44,7 @@ module.exports = {
 
     console.log(bankAccountNotVerificated);
 
-    if(bankAccountNotVerificated[0].fk_status_id === 1){
+    if(bankAccountNotVerificated.length > 0 && bankAccountNotVerificated[0].fk_status_id === 1){
       return 'Bank account is not verified.';
     }
     
