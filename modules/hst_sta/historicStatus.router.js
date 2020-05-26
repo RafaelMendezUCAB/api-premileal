@@ -11,6 +11,7 @@ router.get("/:id", /*auth.validateToken ,*/ historicStatusController.getHistoric
 router.post("/create", /*auth.validateToken ,*/ historicStatusController.createHistoricStatus);
 router.post("/userStatus/:idUser", /*auth.validateToken ,*/ historicStatusController.createUserStatus);
 router.post("/bankAccountStatus/:idBankAccount", /*auth.validateToken ,*/ historicStatusController.createBankAccountStatus);
+router.post("/payment", /*auth.validateToken ,*/ historicStatusController.createPaymentStatus);
 
 /* -------------------------- PUT ---------------------------- */
 router.put("/update/:id", /*auth.validateToken ,*/ historicStatusController.updateHistoricStatus);

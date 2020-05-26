@@ -11,7 +11,7 @@ router.get("/:id", /*auth.validateToken ,*/ settingsController.getSetting);
 router.post("/create", /*auth.validateToken ,*/ settingsController.createSettings);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ settingsController.updateSettings);
+router.put("/update", /*auth.validateToken ,*/ settingsController.updateSettings);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ settingsController.deleteSettings);

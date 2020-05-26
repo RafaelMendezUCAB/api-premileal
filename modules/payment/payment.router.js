@@ -9,6 +9,7 @@ router.get("/:id", /*auth.validateToken ,*/ paymentController.getPayment);
 
 /* ------------------------- POST -------------------------- */
 router.post("/create", /*auth.validateToken ,*/ paymentController.createPayment);
+router.post("/points/purchase", /*auth.validateToken ,*/ paymentController.pointsPurchase)
 
 /* -------------------------- PUT ---------------------------- */
 router.put("/update/:id", /*auth.validateToken ,*/ paymentController.updatePayment);

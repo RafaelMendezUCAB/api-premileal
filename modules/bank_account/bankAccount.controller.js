@@ -31,8 +31,12 @@ module.exports = {
     if (results instanceof Error) {
       logger.error(`Error in module "BankAccount" (GET bankAccount/all/${req.params.idUser})`);
       next(createError(500, "Error. Couldn't obtain bank accounts from database."));
-    } else {
-      logger.info(`List of registered bank accounts in the user ${req.params.idUser}.`);
+    } 
+    else if(results === 'No bank accounts registered.'){      
+      return "No bank accounts registered.";
+    }
+    else {
+      logger.info(`List of registered bank accounts for user ${req.params.idUser}.`);
       res.json(results);
     }
   },
