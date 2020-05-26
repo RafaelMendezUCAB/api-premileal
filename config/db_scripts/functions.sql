@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION GENERATE_BANK_ACCOUNT_FIRST_STATUS()
     RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        INSERT INTO HST_STA(hs_date, fk_bank_ccount_id, fk_status_id) VALUES(now(), NEW.ba_id, 1);
+        INSERT INTO HST_STA(hs_date, fk_bank_account_id, fk_status_id) VALUES(now(), NEW.ba_id, 1);
         RETURN NEW;
     END;
     $BODY$

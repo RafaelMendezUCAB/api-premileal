@@ -1,4 +1,5 @@
 const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
+const sendgrid = require('../../utils/emails/sendgrid');
 
 async function createBankAccountToken(bankAccount){
   try {
@@ -36,7 +37,7 @@ module.exports = {
   },
 
   getAllUserBankAccounts: async (con, UserID) => {
-    const userBankAccounts = await con.query("SELECT bacc.ba_id as \"bankAccountID\", bacc.ba_account_type as \"accountType\", bacc.ba_routing_number as \"routingNumber\", bacc.ba_account_number as \"accountNumber\", bacc.ba_check_number as \"checkNumber\", bacc.ba_is_primary as \"isPrimary\", bacc.ba_holder_name as \"holderName\", ba_stripe_id as \"stripeID\", ba_stripe_connect_id as \"stripeConnectID\", b.ba_name as bank FROM BANK_ACCOUNT bacc, BANK b WHERE fk_user_id = $1 AND bacc.fk_bank_id = b.ba_id", [UserID]).catch((error) => {
+    var userBankAccounts = await con.query("SELECT bacc.ba_id as \"bankAccountID\", bacc.ba_account_type as \"accountType\", bacc.ba_routing_number as \"routingNumber\", bacc.ba_account_number as \"accountNumber\", bacc.ba_check_number as \"checkNumber\", bacc.ba_is_primary as \"isPrimary\", bacc.ba_holder_name as \"holderName\", ba_stripe_id as \"stripeID\", ba_stripe_connect_id as \"stripeConnectID\", b.ba_name as bank FROM BANK_ACCOUNT bacc, BANK b WHERE fk_user_id = $1 AND bacc.fk_bank_id = b.ba_id", [UserID]).catch((error) => {
       console.log(error) ;
       return new Error(error);
     });
@@ -44,6 +45,18 @@ module.exports = {
     if(userBankAccounts instanceof Array && userBankAccounts.length === 0){
       return 'No bank accounts registered.';
     }
+
+    var status;
+    var i = 0;
+
+    while(i < userBankAccounts.length){
+      status = await con.query("SELECT sta_name as status FROM STATUS, HST_STA WHERE fk_bank_account_id = "+userBankAccounts[i].bankAccountID+" AND fk_status_id = sta_id order by hs_id desc limit 1").catch((error) => {
+        console.log(error) ;
+        return new Error(error);
+      });
+      userBankAccounts[i].status = status[0].status;
+      i++;
+    }    
     
     return userBankAccounts;
 
@@ -153,16 +166,21 @@ module.exports = {
     });
 
     let validationAmount1 = validationValues[0].v_payment_1;
-    let validationAmount2 = validationValues[0].v_payment_2;
+    let validationAmount2 = validationValues[0].v_payment_2;    
 
-    if((validationAmount1 === bankAccount.amount1 && validationAmount2 === bankAccount.amount2) || (validationAmount2 === bankAccount.amount1 && validationAmount1 === bankAccount.amount2)){
+    console.log(validationAmount1);
+    console.log(validationAmount2)
+    console.log(parseFloat(bankAccount.firstCharge));
+    console.log(parseFloat(bankAccount.secondCharge));
+
+    if((validationAmount1 === parseFloat(bankAccount.firstCharge) && validationAmount2 === parseFloat(bankAccount.secondCharge)) || (validationAmount2 === parseFloat(bankAccount.firstCharge) && validationAmount1 === parseFloat(bankAccount.secondCharge))){
       try {    
 
         const verificationInformation = await stripe.customers.verifySource(
             //'cus_HDyHhHBY9h5ETD',
-            bankAccount.customer,
+            bankAccount.user.stripe_id,
             //'ba_1GfYfOBDr8hNIY5zZ61sB1Tq',
-            bankAccountID,
+            bankAccount.bankAccount.stripeID,
             {amounts: [32, 45]}            
         );
 
@@ -171,6 +189,15 @@ module.exports = {
         const localVerification = await historicStatusModel.createBankAccountStatus(con, bankAccountID, {statusID: 2});
 
         //Enviar correo electrónico antes del return.
+        const email = await sendgrid.sendEmail({
+          to: bankAccount.user.email,
+          templateID: 'd-b115f83974764464b5b93c35ba986e43',  // Bank account verified template ID
+          atributes : {
+            bank: bankAccount.bankAccount.bank,
+            accountRoutingNumber: bankAccount.bankAccount.routingNumber,
+            accountNumber: bankAccount.bankAccount.accountNumber
+          }
+        });
 
         return 'Sucessfull validation.';
   
