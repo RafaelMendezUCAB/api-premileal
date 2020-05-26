@@ -42,13 +42,18 @@ createSettings: async (req, res, next) => {
 /* -------------------------- PUT ---------------------------- */
 updateSettings: async (req, res, next) => {
     const settings = req.body;
-    let results = await settingsModel.updateSettings(req.con, req.params.id, settings);
+    let results = await settingsModel.updateSettings(req.con, settings);
     if (results instanceof Error) {
-      logger.error(`Error in module "settings" (PUT /update/${req.params.id})`);
+      logger.error(`Error in module "settings" (PUT /update)`);
       next(createError(500, "Error. Could't update settings from database."));
-    } else {
-      logger.info("Updated Settings.");
-      res.json(results);
+    } 
+    else if(results === 'Settings successfully updated.'){
+      logger.info("Settings successfully updated.");
+      res.send("Settings successfully updated.");
+    }
+    else {
+      logger.info("An error ocurred.");
+      res.send("An error ocurred.");
     }
   },
 
