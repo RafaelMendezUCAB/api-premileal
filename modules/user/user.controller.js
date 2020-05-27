@@ -118,6 +118,23 @@ module.exports = {
     }
   },
 
+  updateUserProfileImage: async (req, res, next) => {
+    const image = req.body;
+    let results = await userModel.updateUserProfileImage(req.con, req.params.id, image);
+    if (results instanceof Error) {
+      logger.error(`Error in module "user" (PUT /update/profile/image/${req.params.id})`);
+      next(createError(500, "Error. Could't update user profile image."));
+    } 
+    else if(results === 'Profile image successfully updated.'){
+      logger.info(results);
+      res.send(results);
+    }
+    else {
+      logger.info("An error ocurred.");
+      res.json("An error ocurred.");
+    }
+  },
+
 /* ------------------------- DELETE -------------------------- */
   deleteUser: async (req, res, next) => {
     let results = await userModel.deleteUser(req.con, req.params.id);

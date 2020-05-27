@@ -165,6 +165,16 @@ module.exports = {
     return 'Points successfully updated.';
   },
 
+  updateUserProfileImage: async (con, userID, image) => {
+    console.log("image url: ", image.URL);
+  	var imageUpdated = await con.query("UPDATE USER_F SET u_image = '"+image.URL+"' WHERE u_id = "+userID).catch((error) => {
+      return new Error(error);
+    });
+
+    return 'Profile image successfully updated.';
+
+  },
+
 /* ------------------------- DELETE -------------------------- */
   deleteUser: (con, userID) => {
   	return con.query('DELETE FROM USER_F WHERE u_id = $1', [userID]).catch((error) => {
