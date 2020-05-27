@@ -23,7 +23,7 @@ module.exports = {
   },
 
   login: async (con, email, password) => {
-    var loginData = await con.query("SELECT u.u_id as \"userID\", u.u_name as name, u.u_lastname as \"lastName\", u.u_password as password, u.u_image as image, u.u_email as email, u.u_birthdate as birthdate, u.u_points as points, u.u_type as type, u.u_blocked as blocked, u.u_stripe_id as stripe_id, u.u_stripe_connect_id as stripe_connect_id, u.fk_role_id as \"roleID\", u.fk_place_id as \"placeID\", p_name as place, u.fk_level_id as \"levelID\", r_name as \"roleName\", r_description as \"roleDescription\", l_name as \"levelName\", l_percentage as \"levelPercentage\", l_bonus as \"levelBonus\" FROM USER_F u, ROLE, LEVEL, PLACE WHERE u.u_email = '"+email+"' and u.u_password = '"+password+"' and u.fk_role_id = r_id and r_name = 'client' and u.fk_level_id = l_id and p_id = u.fk_place_id").catch((error) => {
+    var loginData = await con.query("SELECT u.u_id as \"userID\", u.u_name as name, u.u_lastname as \"lastName\", u.u_password as password, u.u_image as image, u.u_email as email, u.u_birthdate as birthdate, u.u_points as points, u.u_type as type, u.u_blocked as blocked, u.u_stripe_id as stripe_id, u.u_stripe_connect_id as stripe_connect_id, u_preferred_language as preferred_language, u.fk_role_id as \"roleID\", u.fk_place_id as \"placeID\", p_name as place, u.fk_level_id as \"levelID\", r_name as \"roleName\", r_description as \"roleDescription\", l_name as \"levelName\", l_percentage as \"levelPercentage\", l_bonus as \"levelBonus\" FROM USER_F u, ROLE, LEVEL, PLACE WHERE u.u_email = '"+email+"' and u.u_password = '"+password+"' and u.fk_role_id = r_id and r_name = 'client' and u.fk_level_id = l_id and p_id = u.fk_place_id").catch((error) => {
       return new Error(error);
     });
     
@@ -42,7 +42,7 @@ module.exports = {
   },
 
   socialLogin: async (con, email, type) => {
-    var loginData = await con.query("SELECT u.u_id as \"userID\", u.u_name as name, u.u_lastname as \"lastName\", u.u_password as password, u.u_image as image, u.u_email as email, u.u_birthdate as birthdate, u.u_points as points, u.u_type as type, u.u_blocked as blocked, u.u_stripe_id as stripe_id, u.u_stripe_connect_id as stripe_connect_id, u.fk_role_id as \"roleID\", u.fk_place_id as \"placeID\", u.fk_level_id as \"levelID\", r_name as \"roleName\", r_description as \"roleDescription\", l_name as \"levelName\", l_percentage as \"levelPercentage\", l_bonus as \"levelBonus\" FROM USER_F u, ROLE, LEVEL WHERE u.u_email = '"+email+"' and u.u_type = '"+type+"' and u.fk_role_id = r_id and r_name = 'client' and u.fk_level_id = l_id").catch((error) => {
+    var loginData = await con.query("SELECT u.u_id as \"userID\", u.u_name as name, u.u_lastname as \"lastName\", u.u_password as password, u.u_image as image, u.u_email as email, u.u_birthdate as birthdate, u.u_points as points, u.u_type as type, u.u_blocked as blocked, u.u_stripe_id as stripe_id, u.u_stripe_connect_id as stripe_connect_id, u_preferred_language as preferred_language, u.fk_role_id as \"roleID\", u.fk_place_id as \"placeID\", u.fk_level_id as \"levelID\", r_name as \"roleName\", r_description as \"roleDescription\", l_name as \"levelName\", l_percentage as \"levelPercentage\", l_bonus as \"levelBonus\" FROM USER_F u, ROLE, LEVEL WHERE u.u_email = '"+email+"' and u.u_type = '"+type+"' and u.fk_role_id = r_id and r_name = 'client' and u.fk_level_id = l_id").catch((error) => {
       return new Error(error);
     });
 
