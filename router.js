@@ -24,7 +24,7 @@ const withdrawRouter = require("./modules/withdraw/withdraw.router");
 router.use("/bank", bankRouter);
 router.use("/user/bank/account", bankAccountRouter);
 router.use("/status/historic", historicStatusRouter);
-router.use("/internatialization", internatializationRouter);
+router.use("/internationalization", internatializationRouter);
 router.use("/invoice", invoiceRouter);
 router.use("/level", levelRouter);
 router.use("/offer", offerRouter);

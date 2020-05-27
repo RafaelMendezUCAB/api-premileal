@@ -5,7 +5,7 @@ const logger = require("../../logger");
 module.exports = {
 /* --------------------------- GET ------------------------- */
   getLanguageTerms: async (req, res, next) => {
-    const language = req.lang;
+    const language = req.params.lang;
     let results = await internationalizationModel.getLanguageTerms(req.con, language);
     if (results instanceof Error) {
       logger.error('Error in module "offer" (GET /all)');

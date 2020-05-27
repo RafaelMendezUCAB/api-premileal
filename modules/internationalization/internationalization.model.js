@@ -1,13 +1,17 @@
+const poEditor = require('../../utils/POeditor/poEditor');;
+
 module.exports = {
 /* --------------------------- GET ------------------------- */
 
   getLanguageTerms: async (con, lang) => {
 
     try {
-
-      const termsTranslated = await poe.getTranslatedTerms(lang);
-
+      console.log("hola 1");
+      const termsTranslated = await poEditor.getTranslatedTerms(lang);
+      console.log("hola 2");
       let translations = [];
+
+      console.log("THEY ARE ", termsTranslated)
 
       termsTranslated.data.result.terms.forEach(term => {
           translations.push({
@@ -16,7 +20,7 @@ module.exports = {
           });
       });    
 
-      res.json(translations);
+      return translations;
 
     } catch (error) {
         console.log(error);
