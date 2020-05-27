@@ -1,6 +1,7 @@
 const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
 const sendgrid = require('../../utils/emails/sendgrid');
 const historicStatus = require('../hst_sta/historicStatus.model');
+const place = require('../place/place.model');
 
 async function changeUserToOnline(con, userID, userStatus){
   return await historicStatus.createUserStatus(con, userID, userStatus);
@@ -22,7 +23,7 @@ module.exports = {
   },
 
   login: async (con, email, password) => {
-    var loginData = await con.query("SELECT u_id as \"userID\", u_name as name, u_lastname as \"lastName\", u_password as password, u_image as image, u_email as email, u_birthdate as birthdate, u_points as points, u_type as type, u_blocked as blocked, u_stripe_id as stripe_id, u_stripe_connect_id as stripe_connect_id, fk_role_id as \"roleID\", fk_place_id as \"placeID\", fk_level_id as \"levelID\", r_name as \"roleName\", r_description as \"roleDescription\", l_name as \"levelName\", l_percentage as \"levelPercentage\", l_bonus as \"levelBonus\" FROM USER_F, ROLE, LEVEL WHERE u_email = '"+email+"' and u_password = '"+password+"' and fk_role_id = r_id and r_name = 'client' and fk_level_id = l_id").catch((error) => {
+    var loginData = await con.query("SELECT u.u_id as \"userID\", u.u_name as name, u.u_lastname as \"lastName\", u.u_password as password, u.u_image as image, u.u_email as email, u.u_birthdate as birthdate, u.u_points as points, u.u_type as type, u.u_blocked as blocked, u.u_stripe_id as stripe_id, u.u_stripe_connect_id as stripe_connect_id, u.fk_role_id as \"roleID\", u.fk_place_id as \"placeID\", p_name as place, u.fk_level_id as \"levelID\", r_name as \"roleName\", r_description as \"roleDescription\", l_name as \"levelName\", l_percentage as \"levelPercentage\", l_bonus as \"levelBonus\" FROM USER_F u, ROLE, LEVEL, PLACE WHERE u.u_email = '"+email+"' and u.u_password = '"+password+"' and u.fk_role_id = r_id and r_name = 'client' and u.fk_level_id = l_id and p_id = u.fk_place_id").catch((error) => {
       return new Error(error);
     });
     
@@ -30,6 +31,7 @@ module.exports = {
       return "Users doesn't exists.";
     }
     else {
+      console.log("user is: ", loginData)
       var statusCreated = await changeUserToOnline(con, loginData[0].userID, {
         statusID: 5
       });
@@ -40,7 +42,7 @@ module.exports = {
   },
 
   socialLogin: async (con, email, type) => {
-    var loginData = await con.query("SELECT u_id as \"userID\", u_name as name, u_lastname as \"lastName\", u_password as password, u_image as image, u_email as email, u_birthdate as birthdate, u_points as points, u_type as type, u_blocked as blocked, u_stripe_id as stripe_id, u_stripe_connect_id as stripe_connect_id, fk_role_id as \"roleID\", fk_place_id as \"placeID\", fk_level_id as \"levelID\", r_name as \"roleName\", r_description as \"roleDescription\", l_name as \"levelName\", l_percentage as \"levelPercentage\", l_bonus as \"levelBonus\" FROM USER_F, ROLE, LEVEL WHERE u_email = '"+email+"' and u_type = '"+type+"' and fk_role_id = r_id and r_name = 'client' and fk_level_id = l_id").catch((error) => {
+    var loginData = await con.query("SELECT u.u_id as \"userID\", u.u_name as name, u.u_lastname as \"lastName\", u.u_password as password, u.u_image as image, u.u_email as email, u.u_birthdate as birthdate, u.u_points as points, u.u_type as type, u.u_blocked as blocked, u.u_stripe_id as stripe_id, u.u_stripe_connect_id as stripe_connect_id, u.fk_role_id as \"roleID\", u.fk_place_id as \"placeID\", u.fk_level_id as \"levelID\", r_name as \"roleName\", r_description as \"roleDescription\", l_name as \"levelName\", l_percentage as \"levelPercentage\", l_bonus as \"levelBonus\" FROM USER_F u, ROLE, LEVEL WHERE u.u_email = '"+email+"' and u.u_type = '"+type+"' and u.fk_role_id = r_id and r_name = 'client' and u.fk_level_id = l_id").catch((error) => {
       return new Error(error);
     });
 
@@ -48,6 +50,12 @@ module.exports = {
       return "Social user doesn't exists.";
     }
     else {
+
+      if(loginData[0].placeID !== null){
+        var placeRetrieved = await place.getPlace(con, loginData[0].placeID);
+        loginData[0].place = placeRetrieved[0].p_name;
+      }
+
       var statusCreated = await changeUserToOnline(con, loginData[0].userID, {
         statusID: 5
       });
@@ -142,8 +150,21 @@ module.exports = {
 
 /* -------------------------- PUT ---------------------------- */
   updateUser: async (con, userID, user) => {
+
+    const stripeUserDataUpdated = await stripe.customers.update(user.stripeID, {
+      name: user.name + ' ' + user.lastName,
+      email: user.email
+    });
+
+    const stripeConnectUserDataUpdated = await stripe.accounts.update(user.stripeConnectID, {
+      individual: {
+        first_name: user.name,
+        last_name: user.lastName
+      }
+    });
+
     var updatedUser = await con.query('UPDATE USER_F SET u_name = $1, u_lastName = $2, u_password = $3, u_image = $4, u_email = $5, u_birthdate = $6, u_points = $7, u_type = $8, u_blocked = $9, fk_role_id = $10, fk_place_id = $11, fk_level_id = $12 WHERE u_id = $13',
-  	[user.name, user.lastName, user.password, user.image, user.email, user.birthdate, user.points, user.type, user.blocked, user.rolID, user.placeID, user.levelID, userID]).catch((error) => {
+  	[user.name, user.lastName, user.password, user.image, user.email, user.birthdate, user.points, user.type, user.blocked, user.roleID, user.placeID, user.levelID, userID]).catch((error) => {
       return new Error(error);
     });
     
