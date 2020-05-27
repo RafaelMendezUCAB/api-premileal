@@ -141,11 +141,14 @@ module.exports = {
   },  
 
 /* -------------------------- PUT ---------------------------- */
-  updateUser: (con, userID, user) => {
-  	return con.query('UPDATE USER_F SET u_name = $1, u_lastName = $2, u_password = $3, u_image = $4, u_email = $5, u_birthdate = $6, u_points = $7, u_type = $8, u_blocked = $9, fk_role_id = $10, fk_place_id = $11, fk_level_id = $12 WHERE u_id = $13',
+  updateUser: async (con, userID, user) => {
+    var updatedUser = await con.query('UPDATE USER_F SET u_name = $1, u_lastName = $2, u_password = $3, u_image = $4, u_email = $5, u_birthdate = $6, u_points = $7, u_type = $8, u_blocked = $9, fk_role_id = $10, fk_place_id = $11, fk_level_id = $12 WHERE u_id = $13',
   	[user.name, user.lastName, user.password, user.image, user.email, user.birthdate, user.points, user.type, user.blocked, user.rolID, user.placeID, user.levelID, userID]).catch((error) => {
       return new Error(error);
     });
+    
+    return "User successfully updated.";
+
   },
 
   updatePoints: async (con, userID, userPoints) => {
