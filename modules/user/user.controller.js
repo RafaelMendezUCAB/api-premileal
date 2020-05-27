@@ -88,9 +88,14 @@ module.exports = {
     if (results instanceof Error) {
       logger.error(`Error in module "user" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update user from database."));
-    } else {
-      logger.info("Updated user.");
-      res.json(results);
+    } 
+    else if(results === "User successfully updated."){
+      logger.info(results);
+      res.send(results);
+    }
+    else {
+      logger.info("An error ocurred. User couldn't be updated");
+      res.send("An error ocurred.");
     }
   },
 
