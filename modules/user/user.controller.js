@@ -140,6 +140,24 @@ module.exports = {
     }
   },
 
+  updatePreferredLanguage: async (req, res, next) => {
+    const userID = req.params.id;
+    const language = req.body
+    let results = await userModel.updatePreferredLanguage(req.con, userID, language);
+    if (results instanceof Error) {
+      logger.error(`Error in module "user" (PUT /update/preferred/language/${req.params.id})`);
+      next(createError(500, "Error. Could't update user preferred language."));
+    } 
+    else if(results === 'Preferred language successfully updated.'){
+      logger.info(results);
+      res.send(results);
+    }
+    else {
+      logger.info("An error ocurred.");
+      res.json("An error ocurred.");
+    }
+  },
+
 /* ------------------------- DELETE -------------------------- */
   deleteUser: async (req, res, next) => {
     let results = await userModel.deleteUser(req.con, req.params.id);

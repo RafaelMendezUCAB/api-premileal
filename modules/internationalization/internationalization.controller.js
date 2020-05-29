@@ -11,7 +11,7 @@ module.exports = {
       logger.error('Error in module "offer" (GET /all)');
       next(createError(500, "Error. Couldn't obtain offers from database."));
     } else {
-      logger.info("List of registered offers retrieved.");
+      logger.info("List of terms retrieved.");
       res.json(results);
     }
   }, 

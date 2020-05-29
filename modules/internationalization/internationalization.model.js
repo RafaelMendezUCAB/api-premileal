@@ -6,12 +6,8 @@ module.exports = {
   getLanguageTerms: async (con, lang) => {
 
     try {
-      console.log("hola 1");
       const termsTranslated = await poEditor.getTranslatedTerms(lang);
-      console.log("hola 2");
       let translations = [];
-
-      console.log("THEY ARE ", termsTranslated)
 
       termsTranslated.data.result.terms.forEach(term => {
           translations.push({
