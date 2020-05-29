@@ -4,13 +4,13 @@ Repositorio para el desarrollo de una API REST a ser consumida por la aplicació
 
 ## Paso 1 :point_up:
 
-Para poder realizar la instalación del API REST para el sistema de Fidelización de Cleinte, se requiere que tenga instalado previamente en su equipo:
+Para poder realizar la instalación del API REST para el sistema de Fidelización de Cliente, se requiere que tenga instalado previamente en su equipo:
 
 > NodeJs
 
 ## Paso 2 :v:
 
-Para poder obtener localmente el proyecto y así dar inicio al desarrollo y/o poder realizar pruebas, deberá abrir la consola de comandos y ejecutar los siguientes comandos :
+Para poder obtener localmente el proyecto y así dar inicio al desarrollo y/o poder realizar pruebas, deberá abrir la consola de comandos y ejecutar los siguientes comandos:
     
 > git clone https://github.com/RafaelMendezUCAB/api-premileal.git
 
