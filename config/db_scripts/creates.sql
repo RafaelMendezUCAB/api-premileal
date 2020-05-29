@@ -78,7 +78,8 @@ CREATE TABLE USER_F (
 	u_type VARCHAR(20),
 	u_blocked BOOLEAN NOT NULL,
 	u_stripe_id VARCHAR(50) NOT NULL UNIQUE,
-	u_stripe_connect_id VARCHAR(50) NOT NULL UNIQUE
+	u_stripe_connect_id VARCHAR(50) NOT NULL UNIQUE,
+	u_preferred_language VARCHAR(10) NOT NULL DEFAULT 'en-us',
 	fk_role_id INTEGER NOT NULL,
 	fk_place_id INTEGER,
 	fk_level_id INTEGER NOT NULL,

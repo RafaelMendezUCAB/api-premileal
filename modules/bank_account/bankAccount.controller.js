@@ -33,7 +33,7 @@ module.exports = {
       next(createError(500, "Error. Couldn't obtain bank accounts from database."));
     } 
     else if(results === 'No bank accounts registered.'){      
-      return "No bank accounts registered.";
+      res.send("No bank accounts registered.");
     }
     else {
       logger.info(`List of registered bank accounts for user ${req.params.idUser}.`);

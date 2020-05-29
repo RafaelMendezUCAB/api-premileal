@@ -18,6 +18,7 @@ router.put("/update/:id", /*auth.validateToken ,*/ userController.updateUser);
 router.put('/points/:id', /*auth.validateToken,*/ userController.updatePoints);
 router.put('/addPoints/:id', /*auth.validateToken,*/ userController.addPoints);
 router.put('/update/profile/image/:id', userController.updateUserProfileImage);
+router.put('/update/preferred/language/:id', userController.updatePreferredLanguage);
 
 /* ------------------------- DELETE -------------------------- */
 router.delete("/delete/:id", /*auth.validateToken ,*/ userController.deleteUser);
