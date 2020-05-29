@@ -554,5 +554,7 @@ INSERT INTO ROUTING_NUMBER(ro_number, fk_bank_id) VALUES('075911988', (SELECT ba
 INSERT INTO ROUTING_NUMBER(ro_number, fk_bank_id) VALUES('102301092', (SELECT ba_id FROM BANK WHERE ba_name = 'Wells Fargo Bank'));
 
 
+insert into user_f(u_name, u_lastname, u_password, u_image, u_email, u_birthdate, u_points, u_type, fk_role_id, u_blocked, u_stripe_id, u_stripe_connect_id, u_preferred_language, fk_level_id, fk_place_id) values('admin2', 'admin2', 'admin2', '', 'admin2@gmail.com', null, 0, 'No Federated', 2, false, '2', '2', 'en-us', 1, (select p_id from place where p_name = 'Venezuela'))
+
 SELECT pay_id as "paymentID", pay_res_cod as "transactionID", fk_user_id as "userID", i_units as "points", u_preferred_language as "preferredLanguage", u_email as "userEmail", u_name as "userName" FROM PAYMENT, INVOICE, USER_F WHERE PAY_ID = 3 AND PAY_ID = FK_PAYMENT_ID AND FK_USER_ID = U_ID
 select * from (select DISTINCT ON(fk_payment_id) * from hst_sta where fk_payment_id is not null order by fk_payment_id, hs_id desc) as status where status.fk_status_id = (SELECT STA_ID FROM STATUS WHERE STA_NAME = 'in process')

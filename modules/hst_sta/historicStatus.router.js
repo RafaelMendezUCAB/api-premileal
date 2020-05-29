@@ -4,19 +4,19 @@ const historicStatusController = require("./historicStatus.controller");
 const auth = require("../../middlewares/auth");
 
 /* --------------------------- GET ------------------------- */
-router.get("/all", /*auth.validateToken ,*/ historicStatusController.getAllHistoricStatus);
-router.get("/:id", /*auth.validateToken ,*/ historicStatusController.getHistoricStatus);
+router.get("/all", historicStatusController.getAllHistoricStatus);
+router.get("/:id", historicStatusController.getHistoricStatus);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ historicStatusController.createHistoricStatus);
-router.post("/userStatus/:idUser", /*auth.validateToken ,*/ historicStatusController.createUserStatus);
-router.post("/bankAccountStatus/:idBankAccount", /*auth.validateToken ,*/ historicStatusController.createBankAccountStatus);
-router.post("/payment", /*auth.validateToken ,*/ historicStatusController.createPaymentStatus);
+router.post("/create", historicStatusController.createHistoricStatus);
+router.post("/userStatus/:idUser", historicStatusController.createUserStatus);
+router.post("/bankAccountStatus/:idBankAccount", historicStatusController.createBankAccountStatus);
+router.post("/payment", historicStatusController.createPaymentStatus);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ historicStatusController.updateHistoricStatus);
+router.put("/update/:id", historicStatusController.updateHistoricStatus);
 
 /* ------------------------- DELETE -------------------------- */
-router.delete("/delete/:id", /*auth.validateToken ,*/ historicStatusController.deleteHistoricStatus);
+router.delete("/delete/:id", historicStatusController.deleteHistoricStatus);
 
 module.exports = router;

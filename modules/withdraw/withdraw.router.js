@@ -4,16 +4,16 @@ const withdrawController = require("./withdraw.controller");
 const auth = require("../../middlewares/auth");
 
 /* --------------------------- GET ------------------------- */
-router.get("/all", /*auth.validateToken ,*/ withdrawController.getAllWithdraws);
-router.get("/:id", /*auth.validateToken ,*/ withdrawController.getWithdraw);
+router.get("/all", withdrawController.getAllWithdraws);
+router.get("/:id", withdrawController.getWithdraw);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ withdrawController.createWithdraw);
+router.post("/create", withdrawController.createWithdraw);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ withdrawController.updateWithdraw);
+router.put("/update/:id", withdrawController.updateWithdraw);
 
 /* ------------------------- DELETE -------------------------- */
-router.delete("/delete/:id", /*auth.validateToken ,*/ withdrawController.deleteWithdraw);
+router.delete("/delete/:id", withdrawController.deleteWithdraw);
 
 module.exports = router;

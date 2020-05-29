@@ -63,6 +63,22 @@ module.exports = {
     }
   },
 
+  adminLogin: async(req, res, next) => {
+    let results = await userModel.adminLogin(req.con, req.params.email, req.params.password);
+    if (results instanceof Error) {
+      logger.error('Error in module "user" (GET /login)');
+      next(createError(500, "Error. Couldn't retreive user data."));
+    } else {
+      if(results.length === 0){
+        res.send("Users doesn't exists.");
+      }
+      else {
+        logger.info("User data retrieved successfully.");
+        res.json(results);
+      }  
+    }
+  },
+
 /* ------------------------- POST --------------------------- */
   createUser: async (req, res, next) => {
     const user = req.body;

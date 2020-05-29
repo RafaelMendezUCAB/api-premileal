@@ -1,7 +1,7 @@
 //const nodeCron = require('../../utils/nodecron/nodeCron');
 const invoice = require('../invoice/invoice.model');
 const sendgrid = require('../../utils/emails/sendgrid');
-const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
+const stripe = require('stripe')('sk_test_FQkgogx8zMA3IYjubruKHZHT00rLNgcX9X');
 
 module.exports = {
 /* --------------------------- GET ------------------------- */
@@ -44,6 +44,31 @@ module.exports = {
     }
 
     return 'Payments Retrieved.';
+
+  },
+
+  notifyAdministrator: async(con, data) => {
+
+    try {
+      var administratorNotified = await sendgrid.sendEmail({
+        to: 'premileal@gmail.com',
+        templateID: 'd-069794eac70f4a739fa0578d50a7f10a', 
+        atributes : {
+          user: data.user.name,
+          userEmail: data.user.email,
+          bank: data.bankAccount.bank,
+          accountRoutingNumber: data.bankAccount.routingNumber,
+          accountNumber: data.bankAccount.accountNumber,
+          accountCheckNumber: data.bankAccount.checkNumber
+        }
+      });
+
+      return 'Administrator notified.';
+
+    } catch (error) {
+      console.log(error);
+      return new Error(error);
+    }
 
   },
 
@@ -178,4 +203,28 @@ module.exports = {
       return new Error(error);
     });
   },
+
+  testPay: async (con, file) => {
+
+    console.log("file is: ", file);
+
+    const email = await sendgrid.sendEmail({
+      to: 'rmendeznieves98@gmail.com',
+      templateID: 'd-c8f6ba309a9741c986d145c80143ddbc', 
+      atributes : {
+        numberPoints: 100,
+        dollarAmount: 1500,
+        serviceCommission: 0.75,
+        statusPoints: 'Proccessing payment.'
+      },
+      attachments: [
+        {
+          filename: file.originalname,
+          type: file.mymetype,
+          content: file.buffer.toString("base64"),
+        },
+      ],
+    });
+
+  }
 };

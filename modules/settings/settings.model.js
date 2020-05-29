@@ -25,13 +25,12 @@ createSettings: (con, settings) => {
 /* -------------------------- PUT ---------------------------- */
 
 updateSettings: async (con, settings) => {
-    const updatedSettings = await con.query('UPDATE SETTINGS SET set_service_commission = $1, set_gateway_commission = $2, set_dolar_value = $3, set_gold_income = $4',
-  	[settings.serviceCommission, settings.gatewayCommission, settings.dolarValue, settings.goldIncome]).catch((error) => {
-      return new Error(error);
-    });  
-
-  	return 'Settings successfully updated.'
-  },
+  const updatedSettings = await con.query('UPDATE SETTINGS SET set_service_commission = $1, set_gateway_commission = $2, set_dolar_value = $3, set_gold_income = $4',
+	[settings.serviceCommission, settings.gatewayCommission, settings.dolarValue, settings.goldIncome]).catch((error) => {
+    return new Error(error);
+  });  
+	return 'Settings successfully updated.'
+},
 /* ------------------------- DELETE -------------------------- */
 
   deleteSettings: (con, settingsID) => {

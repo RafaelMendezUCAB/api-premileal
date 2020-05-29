@@ -46,7 +46,7 @@ module.exports = {
       logger.info("Pending payments list.");
       res.json(results);
     }
-  },
+  },  
 
 /* ------------------------- POST --------------------------- */
   createPayment: async (req, res, next) => {
@@ -82,6 +82,23 @@ module.exports = {
     }
   },
 
+  notifyAdministrator: async (req, res, next) => {
+    const data = req.body;
+    let results = await paymentModel.notifyAdministrator(req.con, data);
+    if (results instanceof Error) {
+      logger.error(`Error in module "payment" (GET /notify/administrator)`);
+      next(createError(500, "Error. Couldn't notify administrator."));
+    } 
+    if(results === "Administrator notified."){
+      logger.info(results);
+      res.send(results);
+    }
+    else {
+      logger.info("Error. Couldn't notify administrator.");
+      res.send("Error. Couldn't notify administrator");
+    }
+  },
+
 /* -------------------------- PUT ---------------------------- */
   updatePayment: async (req, res, next) => {
     const payment = req.body;
@@ -106,4 +123,16 @@ module.exports = {
       res.json(results);
     }
   },
+
+  testPay: async (req, res, next) => {
+    //const payment = req.body;
+    let results = await paymentModel.testPay(req.con, req.file);
+    if (results instanceof Error) {
+      logger.error(`Error in module "payment" `);
+      next(createError(500, "Error.."));
+    } else {
+      logger.info("Payment sent.");
+      res.json(results);
+    }
+  }
 };

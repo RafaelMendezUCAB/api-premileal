@@ -1,4 +1,4 @@
-const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
+const stripe = require('stripe')('sk_test_FQkgogx8zMA3IYjubruKHZHT00rLNgcX9X');
 const sendgrid = require('../../utils/emails/sendgrid');
 
 async function createBankAccountToken(bankAccount){
@@ -137,6 +137,13 @@ module.exports = {
           console.log(error);
           return new Error(error);
         });
+
+        if(bankAccount.isPrimary){
+          const allRestNotPrimary = await con.query("UPDATE BANK_ACCOUNT SET ba_is_primary = FALSE WHERE fk_user_id = "+bankAccount.userID).catch((error) => {
+            console.log(error);
+            return new Error(error);
+          });
+        };
   
         const bankAccountCreatedID = await con.query('INSERT INTO BANK_ACCOUNT(ba_account_type, ba_routing_number, ba_account_number, ba_check_number, ba_is_primary, fk_user_id, ba_stripe_id, ba_stripe_connect_id, ba_holder_name, fk_bank_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, (select ba_id from bank where ba_name = \''+bankAccount.bank+'\')) RETURNING ba_id',
         ['checking', bankAccount.routingNumber, bankAccount.accountNumber, bankAccount.checkNumber, bankAccount.isPrimary, bankAccount.userID, stripeBankAccount.id, stripeConnectBankAccount.id, bankAccount.holderName]).catch((error) => {

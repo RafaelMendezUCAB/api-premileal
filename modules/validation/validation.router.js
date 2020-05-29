@@ -4,16 +4,16 @@ const validationController = require("./validation.controller");
 const auth = require("../../middlewares/auth");
 
 /* --------------------------- GET ------------------------- */
-router.get("/all", /*auth.validateToken ,*/ validationController.getAllValidations);
-router.get("/:id", /*auth.validateToken ,*/ validationController.getValidation);
+router.get("/all", validationController.getAllValidations);
+router.get("/:id", validationController.getValidation);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ validationController.createValidation);
+router.post("/create", validationController.createValidation);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ validationController.updateValidation);
+router.put("/update/:id", validationController.updateValidation);
 
 /* ------------------------- DELETE -------------------------- */
-router.delete("/delete/:id", /*auth.validateToken ,*/ validationController.deleteValidation);
+router.delete("/delete/:id", validationController.deleteValidation);
 
 module.exports = router;

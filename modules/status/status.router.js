@@ -4,16 +4,16 @@ const statusController = require("./status.controller");
 const auth = require("../../middlewares/auth");
 
 /* --------------------------- GET ------------------------- */
-router.get("/all", /*auth.validateToken ,*/ statusController.getAllStatus);
-router.get("/:id", /*auth.validateToken ,*/ statusController.getStatus);
+router.get("/all", statusController.getAllStatus);
+router.get("/:id", statusController.getStatus);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ statusController.createStatus);
+router.post("/create", statusController.createStatus);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ statusController.updateStatus);
+router.put("/update/:id", statusController.updateStatus);
 
 /* ------------------------- DELETE -------------------------- */
-router.delete("/delete/:id", /*auth.validateToken ,*/ statusController.deleteStatus);
+router.delete("/delete/:id", statusController.deleteStatus);
 
 module.exports = router;

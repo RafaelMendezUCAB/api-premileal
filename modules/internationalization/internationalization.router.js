@@ -4,6 +4,6 @@ const internationalizationController = require("./internationalization.controlle
 const auth = require("../../middlewares/auth");
 
 /* --------------------------- GET ------------------------- */
-router.get("/:lang", /*auth.validateToken ,*/ internationalizationController.getLanguageTerms);
+router.get("/:lang", internationalizationController.getLanguageTerms);
 
 module.exports = router;
