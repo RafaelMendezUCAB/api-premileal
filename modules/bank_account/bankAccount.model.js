@@ -213,6 +213,20 @@ module.exports = {
     }       
     
   },
+
+  setBankAccountPrimary: async (con, bankAccountID, userID) => {
+
+    const nowPrimaryAccounts = await con.query("UPDATE bank_account SET ba_is_primary = false WHERE fk_user_id = "+userID).catch((error) => {
+      return new Error(error);
+    });
+
+    const updatedNewPrimaryBankAccount = await con.query("UPDATE bank_account SET ba_is_primary = true WHERE ba_id = "+bankAccountID).catch((error) => {
+      return new Error(error);
+    });
+
+    return "Bank Account now is primary.";
+
+  },
 /* ------------------------- DELETE -------------------------- */
 
   deleteBankAccount: async (con, bankAccountID, bankAccount) => {

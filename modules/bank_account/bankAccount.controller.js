@@ -107,6 +107,22 @@ createBankAccount: async (req, res, next) => {
     }
   },
 
+  setBankAccountPrimary: async (req, res, next) => {
+    let results = await bankAccountModel.setBankAccountPrimary(req.con, req.params.accountid, req.params.userid);
+    if (results instanceof Error) {
+      logger.error(`Error in module "BankAccount" (DELETE /set/primary/${req.params.accountid}/${req.params.userid})`);
+      next(createError(500, "Error. Could't sset bank account as primary from database."));
+    }
+    else if (results === "Bank Account now is primary."){
+      logger.info("Bank Account now is primary.");
+      res.send("Bank Account now is primary.");
+    }
+    else {
+      logger.info("Bank account couldn't be set as primary.");
+      res.send("Bank account couldn't be set as primary.");
+    }
+  },
+
 /* ------------------------- DELETE -------------------------- */
   deleteBankAccount: async (req, res, next) => {
     let results = await bankAccountModel.deleteBankAccount(req.con, req.params.id, req.body);
