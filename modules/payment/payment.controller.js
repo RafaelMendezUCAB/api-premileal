@@ -26,6 +26,28 @@ module.exports = {
     }
   },
 
+  getUserPayments: async (req, res, next) => {
+    let results = await paymentModel.getUserPayments(req.con, req.params.id);
+    if (results instanceof Error) {
+      logger.error(`Error in module "payment" (GET /user/all/${req.params.id})`);
+      next(createError(500, "Error. Couldn't obtain payments of user from database."));
+    } else {
+      logger.info("Registered payments list.");
+      res.json(results);
+    }
+  },
+
+  getPendingPayments: async (req, res, next) => {
+    let results = await paymentModel.getPendingPayments(req.con);
+    if (results instanceof Error) {
+      logger.error(`Error in module "payment" (GET /pending/all)`);
+      next(createError(500, "Error. Couldn't obtain pending payments from database."));
+    } else {
+      logger.info("Pending payments list.");
+      res.json(results);
+    }
+  },
+
 /* ------------------------- POST --------------------------- */
   createPayment: async (req, res, next) => {
     const payment = req.body;

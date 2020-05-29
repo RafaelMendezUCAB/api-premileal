@@ -124,9 +124,17 @@ module.exports = {
           return new Error(error);
         });
 
+        var emailTemplateID = '';
+        if(user.preferredLanguage === 'en-us'){
+          emailTemplateID = 'd-c33955c1ced2408e975095746e315870'
+        }
+        else {
+          emailTemplateID = "d-3d9690c526ef4655a7b994cf1e5cd411"
+        }
+
         const email = await sendgrid.sendEmail({
           to: user.email,
-          templateID: 'd-0f1639f66a1f465d990b22e494ed3239',  // Welcome template ID
+          templateID: emailTemplateID,  // Welcome template ID
           atributes : {
             name: user.name + ' ' + user.lastName
           }

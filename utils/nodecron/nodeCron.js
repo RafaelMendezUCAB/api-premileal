@@ -4,6 +4,7 @@ const con = require('../../config/db');
 
 const historicStatus = require('../../modules/hst_sta/historicStatus.model');
 const user = require('../../modules/user/user.model');
+const payment = require('../../modules/payment/payment.model');
 const sendgrid = require('../emails/sendgrid');
 
 let payments = [];
@@ -24,17 +25,25 @@ async function checkPaymentStatus(payment){
         if(charge.status === 'succeeded'){
             const newStatus = await historicStatus.createPaymentStatus(con, {
                 paymentID: payment.paymentID,
-                statusID: 8
+                statusID: "(SELECT sta_id FROM STATUS WHERE sta_name = 'approved')"
             });
             
             const userPointsUpdate = await user.addPoints(con, payment.userID, {
                 points: payment.points
             });
 
+            var emailTemplateID = '';
+            if(payment.preferredLanguage === 'en-us'){
+              emailTemplateID = 'd-3bd839d71d3d40799cfe72e6735aec1b'
+            }
+            else {
+              emailTemplateID = "d-f779fdf9df3748408c487dab734db84d"
+            }
+
             if(userPointsUpdate === 'Points successfully updated.'){
                 await sendgrid.sendEmail({
                     to: payment.userEmail,
-                    templateID: 'd-3bd839d71d3d40799cfe72e6735aec1b',
+                    templateID: emailTemplateID,
                     atributes: {
                         user: payment.userName,
                         numberPoints: payment.points
@@ -42,13 +51,13 @@ async function checkPaymentStatus(payment){
                 });
 
                 deletePayment(payment);
-                console.log("PAYMENT CHECKED");
+                console.log("PAYMENT CHECKED.");
                 return 'Transaction approved.';
             }
             
         };
 
-        return "Transaction not yet succeded.";
+        return "Transaction not yet approved.";
 
     } catch (error) {
         return "Error. Couldn't verify transaction.";
@@ -57,7 +66,7 @@ async function checkPaymentStatus(payment){
 }
 
 async function checkWithdrawalStatus(transactionID){
-
+    
 }
 
 function addPayment(paymentData){
@@ -71,10 +80,10 @@ function deletePayment(payment){
 async function checkPayments(){
     console.log("checking payments...");
     var i = 0;
-    for(var i = 0; i < payments.length; i++){
-        await checkPaymentStatus(payments[i]);
+    while(payments.length > 0){
+        var paymentApproved = await checkPaymentStatus(payments[i]);
+        i;
     }    
-    
 }
 
 async function checkWithdrawals(){
@@ -84,9 +93,8 @@ async function checkWithdrawals(){
 async function startService(){
     service = cron.schedule('*/1 * * * *', async () =>  {
         if(!firstTime){
-            console.log('Service status...'); 
             await checkPayments();
-            await checkWithdrawals();
+            //await checkWithdrawals();
         }
         else {
             firstTime = false;
@@ -95,7 +103,17 @@ async function startService(){
     service.start();
 }
 
+async function obtaintPendingPayments(){
+    try {        
+        var response = await payment.getPendingPayments(con);
+    } catch (error) {
+        console.log(error);
+    }
+     
+}
+
 function initializeServices(){    
+    obtaintPendingPayments();
     startService();    
     console.log("Services have been started...");
 }

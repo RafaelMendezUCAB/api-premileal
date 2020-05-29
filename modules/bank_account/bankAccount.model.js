@@ -10,12 +10,18 @@ async function createBankAccountToken(bankAccount){
             currency: 'usd',
             account_holder_name: bankAccount.holderName,
             account_holder_type: 'individual',
-            routing_number: '110000000',
+            //routing_number: '110000000',
+            routing_number: bankAccount.routingNumber,
             account_number: '000123456789',
           },
         }
-    );
+    ).catch((error) => {
+      console.log(error);
+      return new Error(error);
+    });
+
     return bankAccountToken;
+
   } catch (error) {
     return new Error(error);
   }
@@ -76,7 +82,11 @@ module.exports = {
 
     bankAccountData.bankAccount = account[0];
 
-    const payments = await con.query('select DISTINCT ON(status.fk_payment_id) status.hs_date as date, status.fk_payment_id as payment, status.fk_status_id as status from (select * from hst_sta, payment p where fk_payment_id is not null and p.pay_id = fk_payment_id and p.fk_bank_account_id = '+bankAccountID+' order by hs_id desc) as status').catch((error) => {
+    /*const payments = await con.query('select DISTINCT ON(status.fk_payment_id) status.hs_date as date, status.fk_payment_id as payment, status.fk_status_id as status from (select * from hst_sta, payment p where fk_payment_id is not null and p.pay_id = fk_payment_id and p.fk_bank_account_id = '+bankAccountID+' order by hs_id desc) as status').catch((error) => {
+      return new Error(error);
+    });*/
+
+    const payments = await con.query("select * from payment pa, hst_sta his where pa.fk_bank_account_id = "+bankAccountID+" and pa.pay_id = his.fk_payment_id and his.fk_status_id = (select sta_id from status where sta_name = 'in process')").catch((error) => {
       return new Error(error);
     });
 
@@ -84,15 +94,14 @@ module.exports = {
       bankAccountData.movements.push(payment);
     });
 
-    const withdraws = await con.query('select DISTINCT ON(status.fk_withdraw_id) status.hs_date as date, status.fk_withdraw_id as withdraw, status.fk_status_id as status from (select * from hst_sta, withdraw w where fk_withdraw_id is not null and w.w_id = fk_withdraw_id and w.fk_bank_account_id = '+bankAccountID+' order by hs_id desc) as status').catch((error) => {
+    /*const withdraws = await con.query('select DISTINCT ON(status.fk_withdraw_id) status.hs_date as date, status.fk_withdraw_id as withdraw, status.fk_status_id as status from (select * from hst_sta, withdraw w where fk_withdraw_id is not null and w.w_id = fk_withdraw_id and w.fk_bank_account_id = '+bankAccountID+' order by hs_id desc) as status').catch((error) => {
       return new Error(error);
     });
 
     withdraws.forEach(withdraw => {
       bankAccountData.movements.push(withdraw);
-    });
+    });*/
 
-    console.log("data is: ", bankAccountData);
 
     return bankAccountData;
   },
@@ -114,7 +123,10 @@ module.exports = {
         const stripeBankAccount = await stripe.customers.createSource(
             bankAccount.customer,
             {source: token}, 
-        );
+        ).catch((error) => {
+          console.log(error);
+          return new Error(error);
+        });
   
         var bankAccountToken = await createBankAccountToken(bankAccount);        
         var token = bankAccountToken.id;
@@ -123,7 +135,10 @@ module.exports = {
           {
             external_account: token,
           }            
-        );
+        ).catch((error) => {
+          console.log(error);
+          return new Error(error);
+        });
   
         const bankAccountCreatedID = await con.query('INSERT INTO BANK_ACCOUNT(ba_account_type, ba_routing_number, ba_account_number, ba_check_number, ba_is_primary, fk_user_id, ba_stripe_id, ba_stripe_connect_id, ba_holder_name, fk_bank_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, (select ba_id from bank where ba_name = \''+bankAccount.bank+'\')) RETURNING ba_id',
         ['checking', bankAccount.routingNumber, bankAccount.accountNumber, bankAccount.checkNumber, bankAccount.isPrimary, bankAccount.userID, stripeBankAccount.id, stripeConnectBankAccount.id, bankAccount.holderName]).catch((error) => {
@@ -142,6 +157,37 @@ module.exports = {
           return new Error(error);
         });
 
+        var user = await con.query('SELECT * FROM USER_F WHERE U_ID = '+bankAccount.userID).catch((error) => {
+          console.log(error);
+          return new Error(error);
+        });
+
+        user = user[0];
+
+        var emailTemplateID = '';
+        if(user.u_preferred_language === 'en-us'){
+          emailTemplateID = 'd-65e6834c7ca64e66a9eb68c9f28d890a'
+        }
+        else {
+          emailTemplateID = "d-3d9690c526ef4655a7b994cf1e5cd411"
+        }
+
+        const email = await sendgrid.sendEmail({
+          to: user.u_email,
+          templateID: emailTemplateID,  // Welcome template ID
+          atributes : {
+            name: user.u_name + ' ' + user.u_lastName,
+            bank: bankAccount.bank,
+            accountHolderName: bankAccount.holderName,
+            accountRoutingNumber: bankAccount.routingNumber,
+            accountNumber: bankAccount.accountNumber,
+
+          }
+        }).catch((error) => {
+          console.log(error);
+          return new Error(error);
+        });
+
         return 'Bank account created.';
   
       } catch (error) {
@@ -154,11 +200,43 @@ module.exports = {
 
 /* -------------------------- PUT ---------------------------- */
 
-  updateBankAccount: (con, bankAccountID, bankAccount) => {
-  	return con.query('UPDATE BANK_ACCOUNT SET ba_account_type = $1, ba_routing_number = $2, ba_account_number = $3, ba_check_number = $4, ba_is_primary = $5, fk_user_id = $6 WHERE ba_id = $7',
-  	[bankAccount.account_type, bankAccount.routing_number, bankAccount.account_number, bankAccount.check_number, bankAccount.is_primary, bankAccount.userID, bankAccountID]).catch((error) => {
+  updateBankAccount: async (con, bankAccountID, data) => {    
+    try {
+      const stripeUserDataUpdated = await stripe.customers.updateSource(
+        /*'cus_HMdscgzLUrecjZ',
+        'ba_1GnuWcBDr8hNIY5z44ocl750', */ 
+          data.userData.stripe_id,
+          data.bankAccount.stripeID,
+        {
+          account_holder_name: data.bankAccount.holderName
+        }
+      ).catch((error) => {
+        console.log(error);
+        return new Error(error);
+      });
+  
+      const stripeConnectUserDataUpdated = await stripe.accounts.updateExternalAccount(
+        /*'acct_1GcuLfBDr8hNIY5z',
+        'ba_1GnuWcBDr8hNIY5z44ocl750',*/
+        data.userData.stripe_connect_id,
+        data.bankAccount.stripeConnectID,
+        {
+          account_holder_name: data.bankAccount.holderName
+        },
+        
+      ).catch((error) => {
+        console.log(error);
+        return new Error(error);
+      });
+  
+      const udatedBankAccount = await con.query("UPDATE BANK_ACCOUNT SET ba_holder_name = '"+data.bankAccount.holderName+"' WHERE ba_id = "+bankAccountID).catch((error) => {
+        return new Error(error);
+      });
+  
+      return 'Bank Account successfully updated.';
+    } catch (error) {
       return new Error(error);
-    });
+    }
   },
 
   verifyBankAccount: async (con, bankAccountID, bankAccount) => {
@@ -184,16 +262,26 @@ module.exports = {
             //'ba_1GfYfOBDr8hNIY5zZ61sB1Tq',
             bankAccount.bankAccount.stripeID,
             {amounts: [32, 45]}            
-        );
+        ).catch((error) => {
+          console.log(error);
+          return new Error(error);
+        });
 
         const historicStatusModel = require("../hst_sta/historicStatus.model");
 
         const localVerification = await historicStatusModel.createBankAccountStatus(con, bankAccountID, {statusID: 2});
 
-        //Enviar correo electrónico antes del return.
+        var emailTemplateID = '';
+        if(bankAccount.user.preferredLanguage === 'en-us'){
+          emailTemplateID = 'd-b115f83974764464b5b93c35ba986e43'
+        }
+        else {
+          emailTemplateID = "d-f9be3c3754cf4f908a8065f436332e26"
+        }
+        
         const email = await sendgrid.sendEmail({
           to: bankAccount.user.email,
-          templateID: 'd-b115f83974764464b5b93c35ba986e43',  // Bank account verified template ID
+          templateID: emailTemplateID,  // Bank account verified template ID
           atributes : {
             bank: bankAccount.bankAccount.bank,
             accountRoutingNumber: bankAccount.bankAccount.routingNumber,
@@ -238,19 +326,24 @@ module.exports = {
         //'ba_1GfukjBDr8hNIY5zpcHhp38y', 
         bankAccount.customer,
         bankAccount.stripeID           
-        );
+        ).catch((error) => {
+          console.log(error);
+          return new Error(error);
+        });
     
-      const deletedConnectBankAccount = await stripe.accounts.deleteExternalAccount(
+      /*const deletedConnectBankAccount = await stripe.accounts.deleteExternalAccount(
           //'acct_1GcuLfBDr8hNIY5z',
           //'ba_1GfukjBDr8hNIY5zpcHhp38y',  
           bankAccount.stripeConnectUserAccountID,
           bankAccount.stripeConnectBankAccountID              
-        );
+        );*/
 
-      return con.query('DELETE FROM BANK_ACCOUNT WHERE ba_id = $1', [bankAccountID]).catch((error) => {
+      const userDeleted = await con.query('DELETE FROM BANK_ACCOUNT WHERE ba_id = $1', [bankAccountID]).catch((error) => {
         console.log(error);
         return new Error(error);
       });
+
+      return 'Bank Account successfully deleted.';
 
     } catch (error) {
       console.dir(error);

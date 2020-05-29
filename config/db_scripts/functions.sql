@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION GENERATE_USER_FIRST_STATUS()
     RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        INSERT INTO HST_STA(hs_date, fk_user_id, fk_status_id) VALUES(now(), NEW.u_id, 10);
+        INSERT INTO HST_STA(hs_date, fk_user_id, fk_status_id) VALUES(now(), NEW.u_id, (SELECT sta_id FROM STATUS WHERE sta_name = 'new user'));
         RETURN NEW;
     END;
     $BODY$
@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION GENERATE_BANK_ACCOUNT_FIRST_STATUS()
     RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        INSERT INTO HST_STA(hs_date, fk_bank_account_id, fk_status_id) VALUES(now(), NEW.ba_id, 1);
+        INSERT INTO HST_STA(hs_date, fk_bank_account_id, fk_status_id) VALUES(now(), NEW.ba_id, (SELECT sta_id FROM STATUS WHERE sta_name = 'unverified'));
         RETURN NEW;
     END;
     $BODY$
@@ -27,7 +27,7 @@ CREATE OR REPLACE FUNCTION GENERATE_PAYMENT_FIRST_STATUS()
     RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        INSERT INTO HST_STA(hs_date, fk_payment_id, fk_status_id) VALUES(now(), NEW.pay_id, 7);
+        INSERT INTO HST_STA(hs_date, fk_payment_id, fk_status_id) VALUES(now(), NEW.pay_id, (SELECT sta_id FROM STATUS WHERE sta_name = 'in process'));
         RETURN NEW;
     END;
     $BODY$

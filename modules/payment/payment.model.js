@@ -1,4 +1,4 @@
-const nodeCron = require('../../utils/nodecron/nodeCron');
+//const nodeCron = require('../../utils/nodecron/nodeCron');
 const invoice = require('../invoice/invoice.model');
 const sendgrid = require('../../utils/emails/sendgrid');
 const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
@@ -16,6 +16,35 @@ module.exports = {
   	return con.query('SELECT * FROM PAYMENT WHERE pay_id = $1', [paymentID]).catch((error) => {
       return new Error(error);
     });
+  },
+
+  getUserPayments: (con, userID) => {
+    return con.query("SELECT U.u_name as name, U.u_lastName as lastname, B.ba_name as bankname, PA.pay_amount as amount, PA.pay_description as description FROM PAYMENT PA, BANK_ACCOUNT BA, BANK B, USER_F U WHERE PA.fk_user_id = U.u_id AND PA.fk_bank_account_id = BA.ba_id AND BA.fk_bank_id = B.ba_id AND U.u_id = "+userID).catch((error) => {
+      return new Error(error);
+    });
+  },
+
+  getPendingPayments: async (con) => {
+
+    var paymentsIDs = await con.query("select * from (select DISTINCT ON(fk_payment_id) * from hst_sta where fk_payment_id is not null order by fk_payment_id, hs_id desc) as status where status.fk_status_id = (SELECT STA_ID FROM STATUS WHERE STA_NAME = 'in process')").catch((error) => {
+      return new Error(error);
+    })
+    
+    if(paymentsIDs instanceof Array && paymentsIDs.length > 0){
+      var payments = [];
+      for(var i = 0; i < paymentsIDs.length; i++){
+        var paymentInfo = await con.query('SELECT pay_id as "paymentID", pay_res_cod as "transactionID", fk_user_id as "userID", i_units as "points", u_preferred_language as "preferredLanguage", u_email as "userEmail", u_name as "userName" FROM PAYMENT, INVOICE, USER_F WHERE PAY_ID = '+paymentsIDs[i].fk_payment_id+' AND PAY_ID = FK_PAYMENT_ID AND FK_USER_ID = U_ID').catch((error) => {
+          return new Error(error);
+        });
+        payments.push(paymentInfo[0]);
+        const nodeCron = require('../../utils/nodecron/nodeCron');
+        nodeCron.addPayment(paymentInfo[0]);
+      }
+
+    }
+
+    return 'Payments Retrieved.';
+
   },
 
 /* ------------------------- POST -------------------------- */
@@ -37,6 +66,8 @@ module.exports = {
 
   pointsPurchase: async (con, payment) => {
 
+    
+
     const bankAccountNotVerificated = await con.query("SELECT * FROM HST_STA WHERE fk_bank_account_id = "+payment.bankAccount.bankAccountID+" order by hs_id desc limit 1").catch((error) => {
       console.log(error);
       return new Error(error);
@@ -49,6 +80,7 @@ module.exports = {
     }
     
     let paymentData = payment;
+    console.log("PAYMENT TOTAL IS: ", paymentData.total)
 
     /*--------------------------------------------------------------------------------
       Amounts must be multiplied by 100 because stripe reads integers, so for example, 
@@ -58,7 +90,7 @@ module.exports = {
     try {
       const payment = await stripe.charges.create(
           {
-            amount: paymentData.total * 100,
+            amount: Math.floor(paymentData.total * 100),
             currency: 'usd',
             //source: 'ba_1GfX59BDr8hNIY5z8B4md4yk',
             source: paymentData.bankAccount.stripeID,
@@ -66,10 +98,14 @@ module.exports = {
             //customer: 'cus_HDyHhHBY9h5ETD',
             customer: paymentData.customer
           }                        
-      );
+      ).catch((error) => {
+        console.log(error);
+        return new Error(error);
+      });
 
       paymentData.transactionID = payment.id;
-      paymentData.status = 'Proccessing';      
+      paymentData.status = 'Proccessing';    
+      console.log("Id de transaccion: ", paymentData.transactionID);
 
       const paymentRegistration = await module.exports.createPayment(con, {
         amount: paymentData.total,
@@ -92,12 +128,20 @@ module.exports = {
 
         if(invoiceRegistration === 'Invoice successfully created.'){
 
+          const nodeCron = require('../../utils/nodecron/nodeCron');
           nodeCron.addPayment(paymentData);
 
-          // Enviar correo de compra de puntos al usuario
+          var emailTemplateID = '';
+          if(paymentData.preferredLanguage === 'en-us'){
+            emailTemplateID = 'd-c8f6ba309a9741c986d145c80143ddbc'
+          }
+          else {
+            emailTemplateID = "d-b25853caba68468ea5c6b10c8b9a53df"
+          }
+
           const email = await sendgrid.sendEmail({
             to: paymentData.userEmail,
-            templateID: 'd-c8f6ba309a9741c986d145c80143ddbc',  // Payment ID.
+            templateID: emailTemplateID,  // Payment ID.
             atributes : {
               numberPoints: paymentData.points,
               dollarAmount: paymentData.total,

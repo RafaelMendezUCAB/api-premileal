@@ -76,14 +76,19 @@ createBankAccount: async (req, res, next) => {
 
 /* -------------------------- PUT ---------------------------- */
   updateBankAccount: async (req, res, next) => {
-    const bankAccount = req.body;
-    let results = await bankAccountModel.updateBankAccount(req.con, req.params.id, bankAccount);
+    const data = req.body;
+    let results = await bankAccountModel.updateBankAccount(req.con, req.params.id, data);
     if (results instanceof Error) {
       logger.error(`Error in module "BankAccount" (PUT /update/${req.params.id})`);
       next(createError(500, "Error. Could't update bank account from database."));
-    } else {
-      logger.info("Updated bank account.");
-      res.json(results);
+    } 
+    else if(results === "Bank Account successfully updated."){
+      logger.info(results)
+      res.send(results);
+    }
+    else {
+      logger.info("Error. Could't update bank account from database.");
+      res.send("Error. Could't update bank account from database.");
     }
   },
 
@@ -129,9 +134,14 @@ createBankAccount: async (req, res, next) => {
     if (results instanceof Error) {
       logger.error(`Error in module "BankAccount" (DELETE /delete/${req.params.id})`);
       next(createError(500, "Error. Could't remove bank account from database."));
-    } else {
-      logger.info("Bank account deleted.");
-      res.json(results);
+    } 
+    else if(results === "Bank Account successfully deleted."){
+      logger.info(results);
+      res.send(results);
+    }
+    else {
+      logger.info("Error. Could't remove bank account from database.");
+      res.se("Error. Could't remove bank account from database.");
     }
   },
 };
