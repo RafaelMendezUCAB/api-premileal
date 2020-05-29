@@ -2,13 +2,13 @@
 
 Repositorio para el desarrollo de una API REST a ser consumida por la aplicación web y la herramienta de Back-Office *Premileal*.
 
-## Paso 1 :one:
+## Paso 1 :point_up:
 
 Para poder realizar la instalación del API REST para el sistema de Fidelización de Cleinte, se requiere que tenga instalado previamente en su equipo:
 
 > NodeJs
 
-## Paso 2 :two:
+## Paso 2 :v:
 
 Para poder obtener localmente el proyecto y así dar inicio al desarrollo y/o poder realizar pruebas, deberá abrir la consola de comandos y ejecutar los siguientes comandos :
     
@@ -20,7 +20,7 @@ Para poder obtener localmente el proyecto y así dar inicio al desarrollo y/o po
 
 De esta manera, podrá comenzar a desarrollar en su máquina.
 
-## Paso 3 :three:
+## Paso 3 :runner:
 
 Para ejecutar el proyecto, deberá correr el siguiente comando: 
 
@@ -46,7 +46,7 @@ Para borrar los datos insertados se abre el archivo de deletes.sql y se compila.
 
 ### Eliminar Tablas y Base de datos
 
-Se abre el archivo de drops.sql, compila primero los DROPS de las tablas y por último de la Base de Datos.
+Se abre el archivo de drops.sql, compila primero los DROPS de las tablas y por último de la Base de Datos que el query es **DROP DATABASE PREMILEAL**.
 
 ## Permisos :closed_lock_with_key:
 
