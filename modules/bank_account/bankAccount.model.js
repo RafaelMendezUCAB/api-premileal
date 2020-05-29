@@ -47,8 +47,6 @@ module.exports = {
       console.log(error) ;
       return new Error(error);
     });
-
-    console.log("Bank accounts: ", userBankAccounts);
     
     if(userBankAccounts instanceof Array && userBankAccounts.length === 0){
       return 'No bank accounts registered.';
