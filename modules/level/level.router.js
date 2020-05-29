@@ -4,16 +4,16 @@ const levelController = require("./level.controller");
 const auth = require("../../middlewares/auth");
 
 /* --------------------------- GET ------------------------- */
-router.get("/all", /*auth.validateToken ,*/ levelController.getAllLevels);
-router.get("/:id", /*auth.validateToken ,*/ levelController.getLevel);
+router.get("/all", levelController.getAllLevels);
+router.get("/:id", levelController.getLevel);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ levelController.createLevel);
+router.post("/create", levelController.createLevel);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ levelController.updateLevel);
+router.put("/update/:id", levelController.updateLevel);
 
 /* ------------------------- DELETE -------------------------- */
-router.delete("/delete/:id", /*auth.validateToken ,*/ levelController.deleteLevel);
+router.delete("/delete/:id", levelController.deleteLevel);
 
 module.exports = router;

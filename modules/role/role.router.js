@@ -4,16 +4,16 @@ const roleController = require("./role.controller");
 const auth = require("../../middlewares/auth");
 
 /* --------------------------- GET ------------------------- */
-router.get("/all", /*auth.validateToken ,*/ roleController.getAllRoles);
-router.get("/:id", /*auth.validateToken ,*/ roleController.getRole);
+router.get("/all", roleController.getAllRoles);
+router.get("/:id", roleController.getRole);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ roleController.createRole);
+router.post("/create", roleController.createRole);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ roleController.updateRole);
+router.put("/update/:id", roleController.updateRole);
 
 /* ------------------------- DELETE -------------------------- */
-router.delete("/delete/:id", /*auth.validateToken ,*/ roleController.deleteRole);
+router.delete("/delete/:id", roleController.deleteRole);
 
 module.exports = router;

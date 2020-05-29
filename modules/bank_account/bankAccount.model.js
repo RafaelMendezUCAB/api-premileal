@@ -1,4 +1,4 @@
-const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
+const stripe = require('stripe')('sk_test_FQkgogx8zMA3IYjubruKHZHT00rLNgcX9X');
 const sendgrid = require('../../utils/emails/sendgrid');
 
 async function createBankAccountToken(bankAccount){

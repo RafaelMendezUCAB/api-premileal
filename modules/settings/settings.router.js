@@ -4,16 +4,16 @@ const settingsController = require("./settings.controller");
 const auth = require("../../middlewares/auth");
 
 /* --------------------------- GET ------------------------- */
-router.get("/all", /*auth.validateToken ,*/ settingsController.getAllSettings);
-router.get("/:id", /*auth.validateToken ,*/ settingsController.getSetting);
+router.get("/all", settingsController.getAllSettings);
+router.get("/:id", settingsController.getSetting);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ settingsController.createSettings);
+router.post("/create", settingsController.createSettings);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update", /*auth.validateToken ,*/ settingsController.updateSettings);
+router.put("/update", settingsController.updateSettings);
 
 /* ------------------------- DELETE -------------------------- */
-router.delete("/delete/:id", /*auth.validateToken ,*/ settingsController.deleteSettings);
+router.delete("/delete/:id", settingsController.deleteSettings);
 
 module.exports = router;

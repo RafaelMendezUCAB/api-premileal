@@ -1,5 +1,5 @@
 var cron = require('node-cron');
-const stripe = require('stripe')('sk_test_h4hCvDfHyNy9OKbPiV74EUGQ00jMw9jpyV');
+const stripe = require('stripe')('sk_test_FQkgogx8zMA3IYjubruKHZHT00rLNgcX9X');
 const con = require('../../config/db');
 
 const historicStatus = require('../../modules/hst_sta/historicStatus.model');
@@ -91,7 +91,7 @@ async function checkWithdrawals(){
 }
 
 async function startService(){
-    service = cron.schedule('*/1 * * * *', async () =>  {
+    service = cron.schedule('*/5 * * * *', async () =>  {
         if(!firstTime){
             await checkPayments();
             //await checkWithdrawals();

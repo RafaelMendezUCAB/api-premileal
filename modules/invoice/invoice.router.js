@@ -4,16 +4,16 @@ const invoiceController = require("./invoice.controller");
 const auth = require("../../middlewares/auth");
 
 /* --------------------------- GET ------------------------- */
-router.get("/all", /*auth.validateToken ,*/ invoiceController.getAllInvoices);
-router.get("/:id", /*auth.validateToken ,*/ invoiceController.getInvoice);
+router.get("/all", invoiceController.getAllInvoices);
+router.get("/:id", invoiceController.getInvoice);
 
 /* ------------------------- POST -------------------------- */
-router.post("/create", /*auth.validateToken ,*/ invoiceController.createInvoice);
+router.post("/create", invoiceController.createInvoice);
 
 /* -------------------------- PUT ---------------------------- */
-router.put("/update/:id", /*auth.validateToken ,*/ invoiceController.updateInvoice);
+router.put("/update/:id", invoiceController.updateInvoice);
 
 /* ------------------------- DELETE -------------------------- */
-router.delete("/delete/:id", /*auth.validateToken ,*/ invoiceController.deleteInvoice);
+router.delete("/delete/:id", invoiceController.deleteInvoice);
 
 module.exports = router;
