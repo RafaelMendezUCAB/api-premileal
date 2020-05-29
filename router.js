@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 // Modules
+const bankRouter = require("./modules/bank/bank.router");
 const bankAccountRouter = require("./modules/bank_account/bankAccount.router");
 const historicStatusRouter = require("./modules/hst_sta/historicStatus.router");
+const internationalization = require("./modules/internationalization/internationalization.router");
 const invoiceRouter = require("./modules/invoice/invoice.router");
 const levelRouter = require("./modules/level/level.router");
 const offerRouter = require("./modules/offer/offer.router");
@@ -19,8 +21,10 @@ const validationRouter = require("./modules/validation/validation.router");
 const withdrawRouter = require("./modules/withdraw/withdraw.router");
 
 // Routes
-router.use("/bank_account", bankAccountRouter);
-router.use("/hst_sta", historicStatusRouter);
+router.use("/bank", bankRouter);
+router.use("/user/bank/account", bankAccountRouter);
+router.use("/status/historic", historicStatusRouter);
+router.use("/internationalization", internationalization);
 router.use("/invoice", invoiceRouter);
 router.use("/level", levelRouter);
 router.use("/offer", offerRouter);
@@ -31,7 +35,7 @@ router.use("/role", roleRouter);
 router.use("/settings", settingsRouter);
 router.use("/status", statusRouter);
 router.use("/user", userRouter);
-router.use("/user_offer", userOfferRouter);
+router.use("/user/offer", userOfferRouter);
 router.use("/validation", validationRouter);
 router.use("/withdraw", withdrawRouter);
 

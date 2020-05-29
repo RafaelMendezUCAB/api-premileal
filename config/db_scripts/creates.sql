@@ -1,64 +1,69 @@
 /* Database */
-
-CREATE DATABASE consorsio_fid_3
+CREATE DATABASE PREMILEAL
 
 /* Tables  */ 
-
 CREATE TABLE ROLE (
 	r_id SERIAL PRIMARY KEY,
-	r_name VARCHAR(50) NOT NULL,
+	r_name VARCHAR(50) NOT NULL UNIQUE,
 	r_description VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE INVOICE (
-	i_id SERIAL PRIMARY KEY,
-	i_units INTEGER NOT NULL,
-	i_amount INTEGER NOT NULL,
-	i_service_commission INTEGER NOT NULL,
-	i_pasarela_commission INTEGER NOT NULL
 );
 
 CREATE TABLE OFFER (
 	o_id SERIAL PRIMARY KEY,
-	o_name VARCHAR(50) NOT NULL,
+	o_name VARCHAR(50) NOT NULL UNIQUE,
 	o_valid_through DATE NOT NULL,
 	o_percentage INTEGER NOT NULL
 );
 
 CREATE TABLE PRODUCT (
 	pro_id SERIAL PRIMARY KEY,
-	pro_name VARCHAR(50) NOT NULL,
+	pro_name VARCHAR(50) NOT NULL UNIQUE,
 	pro_code INTEGER NOT NULL
 );
 
 CREATE TABLE STATUS (
 	sta_id SERIAL PRIMARY KEY,
-	sta_name VARCHAR(50) NOT NULL,
-	sta_description VARCHAR(100) NOT NULL	
+	sta_name VARCHAR(50) NOT NULL UNIQUE,
+	sta_description VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE SETTINGS (
 	set_id SERIAL PRIMARY KEY,
-	set_service_commission INTEGER NOT NULL,
-	set_gateway_commission INTEGER NOT NULL,
+	set_service_commission REAL NOT NULL,
+	set_gateway_commission REAL NOT NULL,
 	set_dolar_value INTEGER NOT NULL,
-	set_gold_income INTEGER NOT NULL
+	set_gold_income REAL NOT NULL
 );
 
 CREATE TABLE LEVEL (
 	l_id SERIAL PRIMARY KEY,
-	l_name VARCHAR(50) NOT NULL,
+	l_name VARCHAR(50) NOT NULL UNIQUE,
 	l_percentage INTEGER NOT NULL,
-	l_bonus INTEGER,
-	l_cost INTEGER NOT NULL
+	l_bonus INTEGER default 0,
+	l_cost REAL NOT NULL
 );
 
 CREATE TABLE PLACE (
 	p_id SERIAL PRIMARY KEY,
-	p_name VARCHAR(50) NOT NULL,
+	p_acronym VARCHAR(10) NOT NULL UNIQUE,
+	p_name VARCHAR(50) NOT NULL UNIQUE,
 	p_type VARCHAR(50) NOT NULL,
-	fk_place INTEGER,
-	CONSTRAINT fk_place_id FOREIGN KEY(fk_place) REFERENCES PLACE(p_id)
+	fk_place_id INTEGER,
+	CONSTRAINT fk_place_id FOREIGN KEY(fk_place_id) REFERENCES PLACE(p_id) ON DELETE CASCADE
+);
+
+CREATE TABLE BANK (
+	ba_id SERIAL PRIMARY KEY,
+	ba_name VARCHAR(50) NOT NULL UNIQUE,
+	fk_place_id INTEGER NOT NULL,
+	CONSTRAINT fk_place_id FOREIGN KEY(fk_place_id) REFERENCES PLACE(p_id) ON DELETE CASCADE
+);
+
+CREATE TABLE ROUTING_NUMBER(
+	ro_id SERIAL PRIMARY KEY,
+	ro_number VARCHAR(50) NOT NULL UNIQUE,
+	fk_bank_id INTEGER NOT NULL,
+	CONSTRAINT fk_bank_id FOREIGN KEY(fk_bank_id) REFERENCES BANK(ba_id) ON DELETE CASCADE
 );
 
 CREATE TABLE USER_F (
@@ -66,87 +71,104 @@ CREATE TABLE USER_F (
 	u_name VARCHAR(50) NOT NULL,
 	u_lastName VARCHAR(50) NOT NULL,
 	u_password VARCHAR(50) NOT NULL,
-	u_image BYTEA,
-	u_email VARCHAR(50) NOT NULL,
-	u_birthdate DATE NOT NULL,
+	u_image VARCHAR(150),
+	u_email VARCHAR(50) NOT NULL UNIQUE,
+	u_birthdate DATE,
 	u_points INTEGER NOT NULL,
-	r_u_id INTEGER,
-	p_u_id INTEGER,
-	l_u_id INTEGER,
-	CONSTRAINT fk_u_r_id FOREIGN KEY(r_u_id) REFERENCES ROLE(r_id),
-	CONSTRAINT fk_u_p_id FOREIGN KEY(p_u_id) REFERENCES PLACE(p_id),
-	CONSTRAINT fk_u_l_id FOREIGN KEY(l_u_id) REFERENCES LEVEL(l_id)
+	u_type VARCHAR(20),
+	u_blocked BOOLEAN NOT NULL,
+	u_stripe_id VARCHAR(50) NOT NULL UNIQUE,
+	u_stripe_connect_id VARCHAR(50) NOT NULL UNIQUE,
+	u_preferred_language VARCHAR(10) NOT NULL DEFAULT 'en-us',
+	fk_role_id INTEGER NOT NULL,
+	fk_place_id INTEGER,
+	fk_level_id INTEGER NOT NULL,
+	CONSTRAINT fk_role_id FOREIGN KEY(fk_role_id) REFERENCES ROLE(r_id) ON DELETE CASCADE,
+	CONSTRAINT fk_place_id FOREIGN KEY(fk_place_id) REFERENCES PLACE(p_id) ON DELETE CASCADE,
+	CONSTRAINT fk_level_id FOREIGN KEY(fk_level_id) REFERENCES LEVEL(l_id) ON DELETE CASCADE
 );
 
 CREATE TABLE BANK_ACCOUNT (
 	ba_id SERIAL PRIMARY KEY,
+	ba_holder_name VARCHAR(100) NOT NULL,
 	ba_account_type VARCHAR(50) NOT NULL,
-	ba_routing_number INTEGER NOT NULL,
-	ba_account_number VARCHAR(50) NOT NULL,
+	ba_routing_number VARCHAR(100) NOT NULL,
+	ba_account_number VARCHAR(100) NOT NULL UNIQUE,
 	ba_check_number VARCHAR(50) NOT NULL,
 	ba_is_primary BOOLEAN NOT NULL,
-	u_ba_id INTEGER,
-	CONSTRAINT fk_ba_u_id FOREIGN KEY(u_ba_id) REFERENCES USER_F(u_id)
+	ba_stripe_id VARCHAR(50) NOT NULL UNIQUE,
+	ba_stripe_connect_id VARCHAR(50) NOT NULL UNIQUE,
+	fk_user_id INTEGER NOT NULL,
+	fk_bank_id INTEGER NOT NULL,
+	CONSTRAINT fk_user_id FOREIGN KEY(fk_user_id) REFERENCES USER_F(u_id) ON DELETE CASCADE,
+	CONSTRAINT fk_bank_id FOREIGN KEY(fk_bank_id) REFERENCES BANK(ba_id) ON DELETE CASCADE
 );
 
 CREATE TABLE WITHDRAW (
 	w_id SERIAL PRIMARY KEY,
 	w_points INTEGER NOT NULL,
-	w_dolars INTEGER NOT NULL,
-	u_w_id INTEGER,
-	ba_w_id INTEGER,
-	CONSTRAINT fk_w_u_id FOREIGN KEY(u_w_id) REFERENCES USER_F(u_id),
-	CONSTRAINT fk_w_ba_id FOREIGN KEY(ba_w_id) REFERENCES BANK_ACCOUNT(ba_id)		
+	w_dolars REAL NOT NULL,
+	fk_user_id INTEGER NOT NULL,
+	fk_bank_account_id INTEGER NOT NULL,
+	CONSTRAINT fk_user_id FOREIGN KEY(fk_user_id) REFERENCES USER_F(u_id) ON DELETE CASCADE,
+	CONSTRAINT fk_bank_account_id FOREIGN KEY(fk_bank_account_id) REFERENCES BANK_ACCOUNT(ba_id) ON DELETE CASCADE		
 );
 
 CREATE TABLE VALIDATION (
 	v_id SERIAL PRIMARY KEY,
-	v_payment_1 INTEGER NOT NULL,
-	v_payment_2 INTEGER NOT NULL,
+	v_payment_1 REAL NOT NULL,
+	v_payment_2 REAL NOT NULL,
 	v_date DATE NOT NULL,
-	u_v_id INTEGER,
-	ba_v_id INTEGER,
-	CONSTRAINT fk_v_u_id FOREIGN KEY(u_v_id) REFERENCES USER_F(u_id),
-	CONSTRAINT fk_v_ba_id FOREIGN KEY(ba_v_id) REFERENCES BANK_ACCOUNT(ba_id)
+	fk_user_id INTEGER NOT NULL,
+	fk_bank_account_id INTEGER NOT NULL,
+	CONSTRAINT fk_user_id FOREIGN KEY(fk_user_id) REFERENCES USER_F(u_id) ON DELETE CASCADE,
+	CONSTRAINT fk_bank_account_id FOREIGN KEY(fk_bank_account_id) REFERENCES BANK_ACCOUNT(ba_id) ON DELETE CASCADE
 );
 
 CREATE TABLE PAYMENT (
 	pay_id SERIAL PRIMARY KEY,
-	pay_amount INTEGER NOT NULL,
-	pay_res_cod INTEGER NOT NULL,
+	pay_amount REAL NOT NULL,
+	pay_res_cod VARCHAR(100) NOT NULL,
 	pay_description VARCHAR(100),
-	u_pay_id INTEGER,
-	ba_pay_id INTEGER,
-	i_pay_id INTEGER,
-	CONSTRAINT fk_pay_u_id FOREIGN KEY(u_pay_id) REFERENCES USER_F(u_id),
-	CONSTRAINT fk_pay_ba_id FOREIGN KEY(ba_pay_id) REFERENCES BANK_ACCOUNT(ba_id),
-	CONSTRAINT fk_pay_i_id FOREIGN KEY(i_pay_id) REFERENCES INVOICE(i_id)
+	fk_user_id INTEGER NOT NULL,
+	fk_bank_account_id INTEGER NOT NULL,
+	CONSTRAINT fk_user_id FOREIGN KEY(fk_user_id) REFERENCES USER_F(u_id) ON DELETE CASCADE,
+	CONSTRAINT fk_bank_account_id FOREIGN KEY(fk_bank_account_id) REFERENCES BANK_ACCOUNT(ba_id) ON DELETE CASCADE
+);
+
+CREATE TABLE INVOICE (
+	i_id SERIAL PRIMARY KEY,
+	i_units INTEGER NOT NULL,
+	i_amount REAL NOT NULL,
+	i_service_commission REAL NOT NULL,
+	i_gateway_commission REAL NOT NULL,
+	fk_payment_id INTEGER NOT NULL,
+	CONSTRAINT fk_payment_id FOREIGN KEY(fk_payment_id) REFERENCES PAYMENT(pay_id) ON DELETE CASCADE
 );
 
 CREATE TABLE USER_OFFER (
-	uo_id SERIAL UNIQUE,
-	o_uo_id INTEGER NOT NULL,
-	u_uo_id INTEGER NOT NULL,
-	pro_uo_id INTEGER NOT NULL,
-	CONSTRAINT fk_uo_o_id FOREIGN KEY(o_uo_id) REFERENCES OFFER(o_id),
-	CONSTRAINT fk_uo_u_id FOREIGN KEY(u_uo_id) REFERENCES USER_F(u_id),
-	CONSTRAINT fk_uo_pro_id FOREIGN KEY(pro_uo_id) REFERENCES PRODUCT(pro_id),
-	CONSTRAINT pk_uo PRIMARY KEY(uo_id,o_uo_id,u_uo_id,pro_uo_id)
+	uo_id SERIAL PRIMARY KEY UNIQUE,
+	fk_offer_id INTEGER NOT NULL,
+	fk_user_id INTEGER NOT NULL,
+	fk_product_id INTEGER NOT NULL,
+	CONSTRAINT fk_offer_id FOREIGN KEY(fk_offer_id) REFERENCES OFFER(o_id) ON DELETE CASCADE,
+	CONSTRAINT fk_user_id FOREIGN KEY(fk_user_id) REFERENCES USER_F(u_id) ON DELETE CASCADE,
+	CONSTRAINT fk_product_id FOREIGN KEY(fk_product_id) REFERENCES PRODUCT(pro_id) ON DELETE CASCADE
 );
 
 CREATE TABLE HST_STA (
 	hs_id SERIAL PRIMARY KEY,
 	hs_date DATE NOT NULL,
-	uo_hs_id INTEGER,
-	pay_hs_id INTEGER,
-	u_hs_id INTEGER,
-	ba_hs_id INTEGER,
-	w_hs_id INTEGER,
-	s_hs_id INTEGER,
-	CONSTRAINT fk_hs_uo_id FOREIGN KEY(uo_hs_id) REFERENCES USER_OFFER(uo_id),
-	CONSTRAINT fk_hs_pay_id FOREIGN KEY(pay_hs_id) REFERENCES PAYMENT(pay_id),
-	CONSTRAINT fk_hs_u_id FOREIGN KEY(u_hs_id) REFERENCES USER_F(u_id),
-	CONSTRAINT fk_hs_ba_id FOREIGN KEY(ba_hs_id) REFERENCES BANK_ACCOUNT(ba_id),
-	CONSTRAINT fk_hs_w_id FOREIGN KEY(w_hs_id) REFERENCES WITHDRAW(w_id),
-	CONSTRAINT fk_hs_s_id FOREIGN KEY(s_hs_id) REFERENCES STATUS(sta_id)
+	fk_user_offer_id INTEGER,
+	fk_payment_id INTEGER,
+	fk_user_id INTEGER,
+	fk_bank_account_id INTEGER,
+	fk_withdraw_id INTEGER,
+	fk_status_id INTEGER,
+	CONSTRAINT fk_user_offer_id FOREIGN KEY(fk_user_offer_id) REFERENCES USER_OFFER(uo_id) ON DELETE CASCADE,
+	CONSTRAINT fk_payment_id FOREIGN KEY(fk_payment_id) REFERENCES PAYMENT(pay_id) ON DELETE CASCADE,
+	CONSTRAINT fk_user_id FOREIGN KEY(fk_user_id) REFERENCES USER_F(u_id) ON DELETE CASCADE,
+	CONSTRAINT fk_bank_account_id FOREIGN KEY(fk_bank_account_id) REFERENCES BANK_ACCOUNT(ba_id) ON DELETE CASCADE,
+	CONSTRAINT fk_withdraw_id FOREIGN KEY(fk_withdraw_id) REFERENCES WITHDRAW(w_id) ON DELETE CASCADE,
+	CONSTRAINT fk_status_id FOREIGN KEY(fk_status_id) REFERENCES STATUS(sta_id) ON DELETE CASCADE
 );
